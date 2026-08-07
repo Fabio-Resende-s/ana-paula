@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz da Enfermeirta Favorita 💕</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 40px;
+            padding: 30px 25px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .foto {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #fff;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            margin-bottom: 15px;
+            transition: transform 0.3s;
+        }
+        .foto:hover {
+            transform: scale(1.05);
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.8rem;
+            color: #6a4e8a;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        .subtitulo {
+            font-size: 1rem;
+            color: #7a5a9a;
+            margin-bottom: 20px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        /* Mensagem inicial personalizada */
+        .mensagem-inicial {
+            background: #f3e8ff;
+            border-radius: 20px;
+            padding: 18px 16px;
+            margin: 10px 0 20px;
+            font-size: 1rem;
+            color: #4a2d5e;
+            border-left: 5px solid #ff7eb3;
+            text-align: left;
+            line-height: 1.6;
+        }
+        .mensagem-inicial strong {
+            color: #b34d7a;
+        }
+        .mensagem-inicial .emoji {
+            font-size: 1.3rem;
+        }
+
+        .quiz-area {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        .quiz-area.active {
+            display: block;
+        }
+
+        .pergunta {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #3d2b4f;
+            margin-bottom: 25px;
+            line-height: 1.4;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 240, 245, 0.6);
+            border-radius: 20px;
+            padding: 15px;
+            border: 2px dashed #d9b3e6;
+        }
+
+        .opcoes {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .opcao {
+            background: #f8f0ff;
+            border: 2px solid #d9b3e6;
+            border-radius: 50px;
+            padding: 14px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #3d2b4f;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 0 #c9a3d6;
+            text-align: center;
+        }
+        .opcao:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #b78bc9;
+            background: #f3e6ff;
+        }
+        .opcao:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #b78bc9;
+        }
+        .opcao.correta {
+            background: #b5e6b5;
+            border-color: #2d8f2d;
+            box-shadow: 0 4px 0 #1f6b1f;
+            color: #1f4f1f;
+        }
+        .opcao.errada {
+            background: #f8b5b5;
+            border-color: #b33b3b;
+            box-shadow: 0 4px 0 #852a2a;
+            color: #5a1a1a;
+        }
+        .opcao.desabilitada {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .msg-explosiva {
+            display: none;
+            background: linear-gradient(135deg, #ffe6f0, #ffd9e8);
+            border-radius: 30px;
+            padding: 25px 20px;
+            margin: 15px 0 20px;
+            border: 3px solid #ff99bb;
+            box-shadow: 0 0 30px rgba(255, 105, 180, 0.3);
+            animation: pulse 1s infinite alternate;
+        }
+        .msg-explosiva.active {
+            display: block;
+        }
+        .msg-explosiva p {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #9b2d5c;
+            margin: 0;
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+        }
+
+        .btn-proximo {
+            background: #9b6bb7;
+            border: none;
+            border-radius: 50px;
+            padding: 14px 35px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 6px 0 #6a4a82;
+            margin-top: 10px;
+            display: none;
+            width: 100%;
+        }
+        .btn-proximo:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 0 #6a4a82;
+            background: #a87fc4;
+        }
+        .btn-proximo:active {
+            transform: translateY(6px);
+            box-shadow: 0 2px 0 #6a4a82;
+        }
+        .btn-proximo.active {
+            display: block;
+        }
+
+        .inicio {
+            display: block;
+            animation: fadeIn 0.6s ease;
+        }
+        .inicio.hidden {
+            display: none;
+        }
+
+        .btn-iniciar {
+            background: #ff7eb3;
+            border: none;
+            border-radius: 60px;
+            padding: 18px 45px;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 8px 0 #b34d7a;
+            margin-top: 15px;
+            font-family: 'Dancing Script', cursive;
+            letter-spacing: 2px;
+        }
+        .btn-iniciar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 0 #b34d7a;
+            background: #ff8fc2;
+        }
+        .btn-iniciar:active {
+            transform: translateY(6px);
+            box-shadow: 0 2px 0 #b34d7a;
+        }
+
+        .final {
+            display: none;
+            animation: fadeIn 0.8s ease;
+        }
+        .final.active {
+            display: block;
+        }
+        .final h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.8rem;
+            color: #6a4e8a;
+            margin-bottom: 10px;
+        }
+        .final p {
+            font-size: 1.2rem;
+            color: #3d2b4f;
+            margin-bottom: 20px;
+        }
+        .btn-reiniciar {
+            background: #6a4e8a;
+            border: none;
+            border-radius: 50px;
+            padding: 14px 35px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 6px 0 #3d2b4f;
+        }
+        .btn-reiniciar:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 0 #3d2b4f;
+            background: #7d5fa3;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1.02);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 15px;
+            }
+            h1 {
+                font-size: 2.2rem;
+            }
+            .pergunta {
+                font-size: 1.1rem;
+                min-height: 60px;
+            }
+            .opcao {
+                font-size: 0.9rem;
+                padding: 12px 16px;
+            }
+            .btn-iniciar {
+                font-size: 1.3rem;
+                padding: 14px 30px;
+            }
+            .mensagem-inicial {
+                font-size: 0.9rem;
+                padding: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="app">
+
+        <!-- TELA INICIAL -->
+        <div class="inicio" id="telaInicio">
+            <!-- Substitua o src pela URL da foto dela -->
+            <img class="foto" src="./img/img.jpeg" alt="Foto dela" id="fotoPerfil" />
+            <h1>💗 Quiz da minha enfermeirta favorita</h1>
+            <p class="subtitulo">Pra você mostrar que é a mais linda e inteligente! 🩺✨</p>
+
+            <!-- Mensagem personalizada (sem Ray) -->
+            <div class="mensagem-inicial">
+                <span class="emoji">🌸</span> <strong>Oi, gatinha!</strong> <br />
+                Sei que você está estudando <strong>enfermagem</strong> com todo carinho, e eu, aqui, estudando <strong>programação</strong>.
+                Resolvi fazer esse quiz especialmente para você, com cada perguntinha pensada nos seus estudos.
+                <br /><br />
+                Cada resposta certa é um conhecimento a mais que quero compartilhar com você. Espero que você avalie meu esforço… <br />
+                <span style="display:block; margin-top:6px; font-style:italic; color:#b34d7a;">
+                    Será que vou me dar bem na programação? kkkk 🤓
+                </span>
+                <span style="display:block; margin-top:8px; font-size:1.2rem;">
+                    💖 Bora testar seus conhecimentos e conquistar seu coraçãozinho? 💖
+                </span>
+            </div>
+
+            <button class="btn-iniciar" id="btnIniciar">Começar 💕</button>
+        </div>
+
+        <!-- ÁREA DO QUIZ -->
+        <div class="quiz-area" id="quizArea">
+            <div class="pergunta" id="pergunta">Carregando pergunta...</div>
+            <div class="opcoes" id="opcoes"></div>
+
+            <div class="msg-explosiva" id="msgExplosiva">
+                <p id="msgTexto">✨ Mensagem especial ✨</p>
+            </div>
+
+            <button class="btn-proximo" id="btnProximo">Próxima ➜</button>
+        </div>
+
+        <!-- TELA FINAL -->
+        <div class="final" id="telaFinal">
+            <h2>🎉 Você arrasou, meu amor!</h2>
+            <p>Acertou todas as perguntas de enfermagem! <br />Você é incrível, inteligente e linda demais! 🩺💕</p>
+            <p style="font-size: 1.5rem; font-family: 'Dancing Script', cursive;">E eu? Será que passei no seu teste? 😏</p>
+            <p style="font-size: 1rem; color: #6a4e8a; margin-top: 5px;">Quero continuar aprendendo com você, todos os dias. ❤️</p>
+            <button class="btn-reiniciar" id="btnReiniciar">Jogar novamente 🔄</button>
+        </div>
+
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ---------- PERGUNTAS SOBRE ENFERMAGEM (com mensagens românticas) ----------
+            const perguntas = [{
+                pergunta: "Qual é o principal sinal vital que indica febre?",
+                opcoes: ["Pressão alta", "Temperatura elevada (>37,5°C)", "Frequência cardíaca baixa", "Respiração ofegante"],
+                resposta: 1,
+                mensagem: "Isso mesmo! Você é uma expert em febre… e em esquentar meu coração! 🌡️❤️"
+            }, {
+                pergunta: "O que significa a sigla 'UTI'?",
+                opcoes: ["Unidade de Tratamento Intensivo", "Unidade de Terapia Integral", "Unidade de Trabalho Interno", "Unidade de Técnicas Intensas"],
+                resposta: 0,
+                mensagem: "Exato! UTI = Unidade de Tratamento Intensivo. Mas sabe o que é mais intenso? O que sinto por você! 🏥💖"
+            }, {
+                pergunta: "Qual procedimento é usado para verificar a glicemia capilar?",
+                opcoes: ["Teste de esforço", "Punção digital (furar o dedo)", "Raio-X", "Eletrocardiograma"],
+                resposta: 1,
+                mensagem: "Perfeito! Punção digital é clássica. Mas a única picada que quero é a do amor, viu? 🩸😘"
+            }, {
+                pergunta: "Em que posição deve ficar um paciente em choque?",
+                opcoes: ["Decúbito dorsal com pernas elevadas", "Sentado", "Deitado de lado", "Em pé"],
+                resposta: 0,
+                mensagem: "Isso! Trendelenburg é essencial. E você me deixa em choque de tão linda! 🛏️💫"
+            }, {
+                pergunta: "Qual a frequência cardíaca normal de um adulto em repouso?",
+                opcoes: ["60 a 100 bpm", "120 a 150 bpm", "30 a 50 bpm", "200 a 220 bpm"],
+                resposta: 0,
+                mensagem: "Acertou! 60-100 bpm. Mas o meu coração dispara a 200 quando te vejo! 💓📚"
+            }];
+
+            // ---------- ELEMENTOS ----------
+            const telaInicio = document.getElementById('telaInicio');
+            const quizArea = document.getElementById('quizArea');
+            const telaFinal = document.getElementById('telaFinal');
+            const btnIniciar = document.getElementById('btnIniciar');
+            const btnProximo = document.getElementById('btnProximo');
+            const btnReiniciar = document.getElementById('btnReiniciar');
+            const perguntaEl = document.getElementById('pergunta');
+            const opcoesEl = document.getElementById('opcoes');
+            const msgExplosiva = document.getElementById('msgExplosiva');
+            const msgTexto = document.getElementById('msgTexto');
+            const fotoPerfil = document.getElementById('fotoPerfil');
+
+            // ---------- ESTADO ----------
+            let indiceAtual = 0;
+            let pontuacao = 0;
+            let jogoFinalizado = false;
+            let podeClicar = true;
+
+            // ---------- FUNÇÕES ----------
+            function iniciarJogo() {
+                indiceAtual = 0;
+                pontuacao = 0;
+                jogoFinalizado = false;
+                telaInicio.classList.add('hidden');
+                quizArea.classList.add('active');
+                telaFinal.classList.remove('active');
+                msgExplosiva.classList.remove('active');
+                btnProximo.classList.remove('active');
+                carregarPergunta();
+            }
+
+            function carregarPergunta() {
+                if (indiceAtual >= perguntas.length) {
+                    finalizarJogo();
+                    return;
+                }
+
+                const dados = perguntas[indiceAtual];
+                perguntaEl.textContent = dados.pergunta;
+
+                opcoesEl.innerHTML = '';
+                dados.opcoes.forEach((texto, idx) => {
+                    const div = document.createElement('div');
+                    div.className = 'opcao';
+                    div.textContent = texto;
+                    div.dataset.index = idx;
+                    div.addEventListener('click', () => selecionarOpcao(idx));
+                    opcoesEl.appendChild(div);
+                });
+
+                msgExplosiva.classList.remove('active');
+                btnProximo.classList.remove('active');
+                podeClicar = true;
+            }
+
+            function selecionarOpcao(indexSelecionado) {
+                if (!podeClicar) return;
+                podeClicar = false;
+
+                const dados = perguntas[indiceAtual];
+                const opcoes = document.querySelectorAll('.opcao');
+                const isCorreta = (indexSelecionado === dados.resposta);
+
+                opcoes.forEach(el => el.classList.add('desabilitada'));
+
+                opcoes.forEach((el, idx) => {
+                    if (idx === dados.resposta) {
+                        el.classList.add('correta');
+                    } else if (idx === indexSelecionado && !isCorreta) {
+                        el.classList.add('errada');
+                    }
+                });
+
+                if (isCorreta) {
+                    pontuacao++;
+                    msgTexto.textContent = dados.mensagem;
+                    msgExplosiva.classList.add('active');
+                    dispararConfetes();
+                } else {
+                    msgTexto.textContent = "Ops! 😅 Mas aprender com você é sempre gostoso, né?";
+                    msgExplosiva.classList.add('active');
+                    msgExplosiva.style.background = "linear-gradient(135deg, #ffe6e6, #ffd1d1)";
+                    msgExplosiva.style.borderColor = "#ff9999";
+                }
+
+                btnProximo.classList.add('active');
+            }
+
+            function proximaPergunta() {
+                if (jogoFinalizado) return;
+                indiceAtual++;
+                if (indiceAtual >= perguntas.length) {
+                    finalizarJogo();
+                } else {
+                    carregarPergunta();
+                    msgExplosiva.style.background = "linear-gradient(135deg, #ffe6f0, #ffd9e8)";
+                    msgExplosiva.style.borderColor = "#ff99bb";
+                }
+            }
+
+            function finalizarJogo() {
+                jogoFinalizado = true;
+                quizArea.classList.remove('active');
+                telaFinal.classList.add('active');
+                dispararConfetes();
+                setTimeout(dispararConfetes, 500);
+                setTimeout(dispararConfetes, 1000);
+            }
+
+            function reiniciarJogo() {
+                telaFinal.classList.remove('active');
+                telaInicio.classList.remove('hidden');
+                quizArea.classList.remove('active');
+                msgExplosiva.classList.remove('active');
+                btnProximo.classList.remove('active');
+                indiceAtual = 0;
+                pontuacao = 0;
+                jogoFinalizado = false;
+                msgExplosiva.style.background = "linear-gradient(135deg, #ffe6f0, #ffd9e8)";
+                msgExplosiva.style.borderColor = "#ff99bb";
+            }
+
+            // ---------- CONFETES ----------
+            function dispararConfetes() {
+                const defaults = {
+                    spread: 360,
+                    ticks: 60,
+                    gravity: 0.8,
+                    decay: 0.94,
+                    startVelocity: 25,
+                    colors: ['#ff6b9d', '#ff9a9e', '#fad0c4', '#ffd1ff', '#a18cd1', '#fbc2eb']
+                };
+
+                function shoot() {
+                    confetti({
+                        ...defaults,
+                        particleCount: 30,
+                        scalar: 1.2,
+                        shapes: ['circle', 'square']
+                    });
+                    confetti({
+                        ...defaults,
+                        particleCount: 20,
+                        scalar: 0.8,
+                        shapes: ['text'],
+                        shapeOptions: {
+                            text: {
+                                value: ['❤️', '🌸', '✨', '💕', '🌟', '🩺'],
+                            }
+                        }
+                    });
+                }
+                shoot();
+                setTimeout(shoot, 200);
+                setTimeout(shoot, 400);
+            }
+
+            // ---------- EVENTOS ----------
+            btnIniciar.addEventListener('click', iniciarJogo);
+            btnProximo.addEventListener('click', proximaPergunta);
+            btnReiniciar.addEventListener('click', reiniciarJogo);
+
+            // (Opcional) colocar a foto real: 
+            // fotoPerfil.src = "caminho/para/foto_dela.jpg";
+
+        })();
+    </script>
+</body>
+</html>
