@@ -3,12 +3,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Quiz da Enfermeirta Favorita 💕</title>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
-    <!-- Canvas Confetti -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
+    <title>💌 Para você</title>
     <style>
+        /* Reset e estilo base */
         * {
             margin: 0;
             padding: 0;
@@ -16,562 +13,490 @@
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+            background: linear-gradient(135deg, #fce4ec, #f8bbd0, #f48fb1);
+            font-family: 'Segoe UI', 'Arial', sans-serif;
             padding: 20px;
+            margin: 0;
+            overflow-x: hidden;
         }
 
+        /* Container principal */
         .container {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border-radius: 40px;
-            padding: 30px 25px;
-            max-width: 500px;
+            position: relative;
             width: 100%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-            text-align: center;
-            transition: all 0.3s ease;
-            border: 2px solid rgba(255, 255, 255, 0.5);
-        }
-
-        .foto {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 5px solid #fff;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-            margin-bottom: 15px;
-            transition: transform 0.3s;
-        }
-        .foto:hover {
-            transform: scale(1.05);
-        }
-
-        h1 {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2.8rem;
-            color: #6a4e8a;
-            margin-bottom: 5px;
-            text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.8);
-        }
-
-        .subtitulo {
-            font-size: 1rem;
-            color: #7a5a9a;
-            margin-bottom: 20px;
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-
-        /* Mensagem inicial personalizada */
-        .mensagem-inicial {
-            background: #f3e8ff;
-            border-radius: 20px;
-            padding: 18px 16px;
-            margin: 10px 0 20px;
-            font-size: 1rem;
-            color: #4a2d5e;
-            border-left: 5px solid #ff7eb3;
-            text-align: left;
-            line-height: 1.6;
-        }
-        .mensagem-inicial strong {
-            color: #b34d7a;
-        }
-        .mensagem-inicial .emoji {
-            font-size: 1.3rem;
-        }
-
-        .quiz-area {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-        .quiz-area.active {
-            display: block;
-        }
-
-        .pergunta {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #3d2b4f;
-            margin-bottom: 25px;
-            line-height: 1.4;
-            min-height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 240, 245, 0.6);
-            border-radius: 20px;
-            padding: 15px;
-            border: 2px dashed #d9b3e6;
-        }
-
-        .opcoes {
+            max-width: 500px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            margin-bottom: 20px;
+            align-items: center;
         }
 
-        .opcao {
-            background: #f8f0ff;
-            border: 2px solid #d9b3e6;
+        /* Envelope */
+        .envelope {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1.2 / 1;
+            background: #f9e4d4;
+            border-radius: 12px 12px 6px 6px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-origin: bottom;
+            z-index: 2;
+        }
+
+        .envelope:hover {
+            transform: scale(1.02);
+        }
+
+        .envelope.aberto {
+            transform: scale(0.95) translateY(-20px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Abas do envelope */
+        .envelope .aba {
+            position: absolute;
+            background: #e8c9b5;
+            transition: all 0.6s ease;
+        }
+
+        .envelope .aba-topo {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            clip-path: polygon(0 0, 50% 100%, 100% 0);
+            background: #e8c9b5;
+            border-radius: 12px 12px 0 0;
+            z-index: 3;
+            transform-origin: top;
+            transition: transform 0.6s ease, opacity 0.3s ease;
+        }
+
+        .envelope.aberto .aba-topo {
+            transform: rotateX(180deg);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .envelope .aba-lateral {
+            bottom: 0;
+            left: 0;
+            width: 50%;
+            height: 50%;
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            background: #dbb8a2;
+            border-radius: 0 0 0 6px;
+        }
+
+        .envelope .aba-lateral.direita {
+            left: 50%;
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            border-radius: 0 0 6px 0;
+        }
+
+        /* Coração no envelope */
+        .envelope .selo {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.8rem;
+            z-index: 4;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+            transition: transform 0.6s ease;
+        }
+
+        .envelope.aberto .selo {
+            transform: translate(-50%, -50%) scale(0) rotate(180deg);
+            opacity: 0;
+        }
+
+        /* Carta (dentro do envelope) */
+        .carta {
+            position: absolute;
+            top: 8%;
+            left: 6%;
+            width: 88%;
+            height: 84%;
+            background: #fffdf9;
+            border-radius: 8px;
+            padding: 20px 18px;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.04);
+            z-index: 1;
+            overflow-y: auto;
+            transition: all 0.8s ease;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: scale(0.8) translateY(20px);
+            pointer-events: none;
+        }
+
+        .envelope.aberto .carta {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+            z-index: 5;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .carta::-webkit-scrollbar {
+            width: 4px;
+        }
+        .carta::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .carta::-webkit-scrollbar-thumb {
+            background: #e8c9b5;
+            border-radius: 4px;
+        }
+
+        .carta h1 {
+            font-size: 1.6rem;
+            color: #d63384;
+            margin-bottom: 6px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .carta .subtitulo {
+            font-size: 0.9rem;
+            color: #ad6a8c;
+            margin-bottom: 16px;
+            border-bottom: 2px dashed #f3d9e8;
+            padding-bottom: 10px;
+        }
+
+        .carta .mensagem {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #4a2c3a;
+            flex: 1;
+        }
+
+        .carta .mensagem p {
+            margin-bottom: 12px;
+        }
+
+        .carta .mensagem .destaque {
+            color: #d63384;
+            font-weight: 500;
+        }
+
+        .carta .assinatura {
+            margin-top: 16px;
+            text-align: right;
+            font-style: italic;
+            color: #7a4b6a;
+            border-top: 1px solid #f3d9e8;
+            padding-top: 12px;
+        }
+
+        .carta .assinatura span {
+            display: block;
+            font-size: 0.85rem;
+            color: #b07a9a;
+        }
+
+        /* Botão de ação */
+        .btn-acao {
+            margin-top: 24px;
+            padding: 12px 32px;
+            background: #d63384;
+            color: white;
+            border: none;
             border-radius: 50px;
-            padding: 14px 20px;
             font-size: 1rem;
             font-weight: 600;
-            color: #3d2b4f;
+            letter-spacing: 0.5px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 0 #c9a3d6;
-            text-align: center;
-        }
-        .opcao:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 0 #b78bc9;
-            background: #f3e6ff;
-        }
-        .opcao:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 #b78bc9;
-        }
-        .opcao.correta {
-            background: #b5e6b5;
-            border-color: #2d8f2d;
-            box-shadow: 0 4px 0 #1f6b1f;
-            color: #1f4f1f;
-        }
-        .opcao.errada {
-            background: #f8b5b5;
-            border-color: #b33b3b;
-            box-shadow: 0 4px 0 #852a2a;
-            color: #5a1a1a;
-        }
-        .opcao.desabilitada {
-            pointer-events: none;
-            opacity: 0.6;
+            box-shadow: 0 6px 20px rgba(214, 51, 132, 0.4);
+            transition: all 0.3s ease;
+            z-index: 6;
+            position: relative;
         }
 
-        .msg-explosiva {
-            display: none;
-            background: linear-gradient(135deg, #ffe6f0, #ffd9e8);
-            border-radius: 30px;
-            padding: 25px 20px;
-            margin: 15px 0 20px;
-            border: 3px solid #ff99bb;
-            box-shadow: 0 0 30px rgba(255, 105, 180, 0.3);
-            animation: pulse 1s infinite alternate;
-        }
-        .msg-explosiva.active {
-            display: block;
-        }
-        .msg-explosiva p {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #9b2d5c;
-            margin: 0;
-            font-family: 'Dancing Script', cursive;
-            font-size: 2rem;
+        .btn-acao:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 28px rgba(214, 51, 132, 0.5);
+            background: #c22a75;
         }
 
-        .btn-proximo {
-            background: #9b6bb7;
-            border: none;
-            border-radius: 50px;
-            padding: 14px 35px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #fff;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 6px 0 #6a4a82;
-            margin-top: 10px;
+        .btn-acao:active {
+            transform: scale(0.96);
+        }
+
+        .btn-acao.oculto {
             display: none;
+        }
+
+        /* Corações flutuantes (partículas) */
+        .coracoes-container {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-        }
-        .btn-proximo:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 0 #6a4a82;
-            background: #a87fc4;
-        }
-        .btn-proximo:active {
-            transform: translateY(6px);
-            box-shadow: 0 2px 0 #6a4a82;
-        }
-        .btn-proximo.active {
-            display: block;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            overflow: hidden;
         }
 
-        .inicio {
-            display: block;
-            animation: fadeIn 0.6s ease;
-        }
-        .inicio.hidden {
-            display: none;
-        }
-
-        .btn-iniciar {
-            background: #ff7eb3;
-            border: none;
-            border-radius: 60px;
-            padding: 18px 45px;
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: #fff;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 8px 0 #b34d7a;
-            margin-top: 15px;
-            font-family: 'Dancing Script', cursive;
-            letter-spacing: 2px;
-        }
-        .btn-iniciar:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 0 #b34d7a;
-            background: #ff8fc2;
-        }
-        .btn-iniciar:active {
-            transform: translateY(6px);
-            box-shadow: 0 2px 0 #b34d7a;
+        .coracao-particle {
+            position: absolute;
+            font-size: 1.8rem;
+            animation: subir 6s ease-in forwards;
+            opacity: 0;
+            user-select: none;
         }
 
-        .final {
-            display: none;
-            animation: fadeIn 0.8s ease;
-        }
-        .final.active {
-            display: block;
-        }
-        .final h2 {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2.8rem;
-            color: #6a4e8a;
-            margin-bottom: 10px;
-        }
-        .final p {
-            font-size: 1.2rem;
-            color: #3d2b4f;
-            margin-bottom: 20px;
-        }
-        .btn-reiniciar {
-            background: #6a4e8a;
-            border: none;
-            border-radius: 50px;
-            padding: 14px 35px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #fff;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 6px 0 #3d2b4f;
-        }
-        .btn-reiniciar:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 0 #3d2b4f;
-            background: #7d5fa3;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        @keyframes pulse {
+        @keyframes subir {
             0% {
-                transform: scale(1);
+                opacity: 0;
+                transform: translateY(100vh) scale(0.3) rotate(0deg);
+            }
+            20% {
+                opacity: 1;
+                transform: translateY(80vh) scale(1) rotate(10deg);
             }
             100% {
-                transform: scale(1.02);
+                opacity: 0;
+                transform: translateY(-10vh) scale(0.8) rotate(-20deg);
             }
         }
 
+        /* Responsividade */
         @media (max-width: 480px) {
-            .container {
-                padding: 20px 15px;
+            .envelope {
+                max-width: 100%;
             }
-            h1 {
+            .carta h1 {
+                font-size: 1.3rem;
+            }
+            .carta .mensagem {
+                font-size: 0.9rem;
+            }
+            .envelope .selo {
                 font-size: 2.2rem;
             }
-            .pergunta {
-                font-size: 1.1rem;
-                min-height: 60px;
-            }
-            .opcao {
-                font-size: 0.9rem;
-                padding: 12px 16px;
-            }
-            .btn-iniciar {
-                font-size: 1.3rem;
-                padding: 14px 30px;
-            }
-            .mensagem-inicial {
-                font-size: 0.9rem;
-                padding: 14px;
-            }
+        }
+
+        /* Estilo do texto do botão de abrir */
+        .instrucao {
+            margin-top: 12px;
+            color: #7a4b6a;
+            font-weight: 500;
+            font-size: 0.95rem;
+            opacity: 0.8;
+            transition: opacity 0.4s;
+        }
+
+        .instrucao.oculto {
+            opacity: 0;
+        }
+
+        /* Pequeno toque extra */
+        .footer-msg {
+            margin-top: 20px;
+            color: #a06a8a;
+            font-size: 0.75rem;
+            opacity: 0.6;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-    <div class="container" id="app">
+    <div class="container">
+        <!-- Envelope -->
+        <div class="envelope" id="envelope">
+            <!-- Abas -->
+            <div class="aba aba-topo"></div>
+            <div class="aba aba-lateral"></div>
+            <div class="aba aba-lateral direita"></div>
 
-        <!-- TELA INICIAL -->
-        <div class="inicio" id="telaInicio">
-            <!-- Substitua o src pela URL da foto dela -->
-            <img class="foto" src="./img/img.jpeg" alt="Foto dela" id="fotoPerfil" />
-            <h1> 🩺 Quiz da futura enfermeira favorita 💗</h1>
-            <p class="subtitulo">Pra você mostrar que é a mais linda e inteligente! 🩺✨</p>
+            <!-- Selo (coração) -->
+            <div class="selo">❤️</div>
 
-            <!-- Mensagem personalizada (sem Ray) -->
-            <div class="mensagem-inicial">
-                <span class="emoji">🌸</span> <strong>Oi, Ana Paula!</strong> <br />
-                Sei que você está estudando <strong>enfermagem</strong> com todo carinho, e eu, aqui, estudando <strong>programação</strong>.
-                Resolvi fazer esse quiz especialmente para você, com cada perguntinha pensada nos seus estudos.
-                <br /><br />
-                Cada resposta certa é um conhecimento a mais que quero compartilhar com você. Espero que você avalie meu esforço… <br />
-                <span style="display:block; margin-top:6px; font-style:italic; color:#b34d7a;">
-                    Será que vou me dar bem na programação? kkkk 🤓
-                </span>
-                <span style="display:block; margin-top:8px; font-size:1.2rem;">
-                    💖 Bora testar seus conhecimentos e conquistar seu coraçãozinho? kkk 💖
-                </span>
+            <!-- Carta (o conteúdo) -->
+            <div class="carta" id="carta">
+                <h1>💕 Para você</h1>
+                <div class="subtitulo">✨ uma mensagem especial ✨</div>
+                <div class="mensagem">
+                    <p>
+                        Oi, <span class="destaque">[Nome da sua amiga]</span>!
+                    </p>
+                    <p>
+                        Eu queria te escrever dessa forma um pouco diferente,
+                        porque você merece algo mais que uma simples mensagem.
+                    </p>
+                    <p>
+                        <span class="destaque">☀️</span> Seu sorriso ilumina
+                        meu dia de um jeito que eu nem sabia ser possível.
+                        Cada conversa nossa é um pedacinho de felicidade que
+                        guardo com carinho.
+                    </p>
+                    <p>
+                        <span class="destaque">🌸</span> Não sei se você já
+                        percebeu, mas eu fico todo bobo quando estou perto de
+                        você. E é por isso que estou aqui, tentando conquistar
+                        seu coração com essa cartinha virtual.
+                    </p>
+                    <p>
+                        <span class="destaque">💫</span> Espero que você goste
+                        e que possamos construir muitos momentos juntos.
+                        Você é especial demais para ser só mais uma amiga.
+                    </p>
+                    <p style="margin-top: 8px;">
+                        Com todo carinho,
+                    </p>
+                </div>
+                <div class="assinatura">
+                    💌 <strong>De alguém que te admira</strong>
+                    <span>— [Seu nome]</span>
+                </div>
             </div>
-
-            <button class="btn-iniciar" id="btnIniciar">Começar 💕</button>
         </div>
 
-        <!-- ÁREA DO QUIZ -->
-        <div class="quiz-area" id="quizArea">
-            <div class="pergunta" id="pergunta">Carregando pergunta...</div>
-            <div class="opcoes" id="opcoes"></div>
+        <!-- Botão para abrir / interagir -->
+        <button class="btn-acao" id="btnAbrir">💖 Abrir cartinha</button>
+        <p class="instrucao" id="instrucao">Clique no envelope ou no botão</p>
 
-            <div class="msg-explosiva" id="msgExplosiva">
-                <p id="msgTexto">✨ Mensagem especial ✨</p>
-            </div>
-
-            <button class="btn-proximo" id="btnProximo">Próxima ➜</button>
-        </div>
-
-        <!-- TELA FINAL -->
-        <div class="final" id="telaFinal">
-            <h2>🎉 Você arrasou, Parabens!</h2>
-            <p>Acertou todas as perguntas de enfermagem! <br />Você é incrível, inteligente e linda demais! 🩺💕</p>
-            <p style="font-size: 1.5rem; font-family: 'Dancing Script', cursive;">E eu? Será que passei no seu teste? qual nota vc mim daria kk 😏</p>
-            <p style="font-size: 1rem; color: #6a4e8a; margin-top: 5px;">Quero continuar aprendendo com você, todos os dias. ❤️</p>
-            <button class="btn-reiniciar" id="btnReiniciar">Jogar novamente 🔄</button>
-        </div>
-
+        <div class="footer-msg">Feito com 💕 para você</div>
     </div>
+
+    <!-- Container para os corações flutuantes -->
+    <div class="coracoes-container" id="coracoesContainer"></div>
 
     <script>
         (function() {
-            'use strict';
+            const envelope = document.getElementById('envelope');
+            const btnAbrir = document.getElementById('btnAbrir');
+            const instrucao = document.getElementById('instrucao');
+            const coracoesContainer = document.getElementById('coracoesContainer');
 
-            // ---------- PERGUNTAS SOBRE ENFERMAGEM (com mensagens românticas) ----------
-            const perguntas = [{
-                pergunta: "Qual é o principal sinal vital que indica febre?",
-                opcoes: ["Pressão alta", "Temperatura elevada (>37,5°C)", "Frequência cardíaca baixa", "Respiração ofegante"],
-                resposta: 1,
-                mensagem: "Isso mesmo, Ana Paula! 😂 Você é especialista em febre... e em deixar o povo sem resposta! 🌡️😅"
-            }, {
-                pergunta: "O que significa a sigla 'UTI'?",
-                opcoes: ["Unidade de Tratamento Intensivo", "Unidade de Terapia Integral", "Unidade de Trabalho Interno", "Unidade de Técnicas Intensas"],
-                resposta: 0,
-                mensagem: "Isso mesmo, Ana Paula! UTI significa Unidade de Tratamento Intensivo. Agora só falta você descobrir o remédio pra quem fica pensando em você. 😂🏥💙"
-            }, {
-                pergunta: "Qual procedimento é usado para verificar a glicemia capilar?",
-                opcoes: ["Teste de esforço", "Punção digital (furar o dedo)", "Raio-X", "Eletrocardiograma"],
-                resposta: 1,
-                mensagem: "Boa, Ana Paula! Acertou! A glicemia capilar é verificada com a punção digital. Pelo visto, você leva jeito pra área da saúde... e tá me impressionando cada vez mais. 😊💙🩸😘"
-            }, {
-                pergunta: "Em que posição deve ficar um paciente em choque?",
-                opcoes: ["Decúbito dorsal com pernas elevadas", "Sentado", "Deitado de lado", "Em pé"],
-                resposta: 0,
-                mensagem: "Acertou de novo, Ana Paula! Assim você vai zerar esse quiz rapidinho. 😄🏆"
-            }, {
-                pergunta: "Qual a frequência cardíaca normal de um adulto em repouso?",
-                opcoes: ["60 a 100 bpm", "120 a 150 bpm", "30 a 50 bpm", "200 a 220 bpm"],
-                resposta: 0,
-                mensagem: "Muito bem, Ana Paula! Mais uma certa. Tô gostando de ver... você tá surpreendendo nesse quiz. 😉📚"
-            }];
+            // Lista de emojis de coração/amor
+            const coracoes = ['❤️', '💕', '💖', '💗', '💓', '💝', '✨', '🌸', '🌺', '💘'];
 
-            // ---------- ELEMENTOS ----------
-            const telaInicio = document.getElementById('telaInicio');
-            const quizArea = document.getElementById('quizArea');
-            const telaFinal = document.getElementById('telaFinal');
-            const btnIniciar = document.getElementById('btnIniciar');
-            const btnProximo = document.getElementById('btnProximo');
-            const btnReiniciar = document.getElementById('btnReiniciar');
-            const perguntaEl = document.getElementById('pergunta');
-            const opcoesEl = document.getElementById('opcoes');
-            const msgExplosiva = document.getElementById('msgExplosiva');
-            const msgTexto = document.getElementById('msgTexto');
-            const fotoPerfil = document.getElementById('fotoPerfil');
+            let aberto = false;
+            let timeoutCoracoes = null;
 
-            // ---------- ESTADO ----------
-            let indiceAtual = 0;
-            let pontuacao = 0;
-            let jogoFinalizado = false;
-            let podeClicar = true;
+            // Função para abrir o envelope
+            function abrirEnvelope() {
+                if (aberto) return;
+                aberto = true;
 
-            // ---------- FUNÇÕES ----------
-            function iniciarJogo() {
-                indiceAtual = 0;
-                pontuacao = 0;
-                jogoFinalizado = false;
-                telaInicio.classList.add('hidden');
-                quizArea.classList.add('active');
-                telaFinal.classList.remove('active');
-                msgExplosiva.classList.remove('active');
-                btnProximo.classList.remove('active');
-                carregarPergunta();
+                // Adiciona classe de aberto
+                envelope.classList.add('aberto');
+
+                // Muda o botão
+                btnAbrir.textContent = '💌 Já abriu!';
+                btnAbrir.classList.add('oculto');
+                instrucao.classList.add('oculto');
+
+                // Dispara corações
+                dispararCoracoes();
+
+                // (Opcional) tocar um som? Não temos, mas podemos só vibrar se suportado
+                if (navigator.vibrate) navigator.vibrate(30);
             }
 
-            function carregarPergunta() {
-                if (indiceAtual >= perguntas.length) {
-                    finalizarJogo();
-                    return;
+            // Função que gera corações flutuando
+            function dispararCoracoes() {
+                // Limpa qualquer timeout anterior
+                if (timeoutCoracoes) {
+                    clearTimeout(timeoutCoracoes);
+                    timeoutCoracoes = null;
                 }
 
-                const dados = perguntas[indiceAtual];
-                perguntaEl.textContent = dados.pergunta;
+                // Remove corações antigos (mas com transição suave, só removemos depois)
+                // Vamos limpar o container e adicionar novos em ondas
+                coracoesContainer.innerHTML = '';
 
-                opcoesEl.innerHTML = '';
-                dados.opcoes.forEach((texto, idx) => {
-                    const div = document.createElement('div');
-                    div.className = 'opcao';
-                    div.textContent = texto;
-                    div.dataset.index = idx;
-                    div.addEventListener('click', () => selecionarOpcao(idx));
-                    opcoesEl.appendChild(div);
-                });
+                // Número de corações
+                const total = 35;
+                let count = 0;
 
-                msgExplosiva.classList.remove('active');
-                btnProximo.classList.remove('active');
-                podeClicar = true;
-            }
-
-            function selecionarOpcao(indexSelecionado) {
-                if (!podeClicar) return;
-                podeClicar = false;
-
-                const dados = perguntas[indiceAtual];
-                const opcoes = document.querySelectorAll('.opcao');
-                const isCorreta = (indexSelecionado === dados.resposta);
-
-                opcoes.forEach(el => el.classList.add('desabilitada'));
-
-                opcoes.forEach((el, idx) => {
-                    if (idx === dados.resposta) {
-                        el.classList.add('correta');
-                    } else if (idx === indexSelecionado && !isCorreta) {
-                        el.classList.add('errada');
+                function adicionarProximo() {
+                    if (count >= total) {
+                        // Depois de um tempo, limpa tudo para não acumular
+                        timeoutCoracoes = setTimeout(() => {
+                            coracoesContainer.innerHTML = '';
+                            timeoutCoracoes = null;
+                        }, 7000);
+                        return;
                     }
-                });
 
-                if (isCorreta) {
-                    pontuacao++;
-                    msgTexto.textContent = dados.mensagem;
-                    msgExplosiva.classList.add('active');
-                    dispararConfetes();
-                } else {
-                    msgTexto.textContent = "Ops! 😅 Mas aprender com você é sempre gostoso, né?";
-                    msgExplosiva.classList.add('active');
-                    msgExplosiva.style.background = "linear-gradient(135deg, #ffe6e6, #ffd1d1)";
-                    msgExplosiva.style.borderColor = "#ff9999";
+                    const el = document.createElement('div');
+                    el.classList.add('coracao-particle');
+
+                    // Escolhe um coração aleatório
+                    const emoji = coracoes[Math.floor(Math.random() * coracoes.length)];
+                    el.textContent = emoji;
+
+                    // Tamanho aleatório
+                    const size = 1.2 + Math.random() * 1.8;
+                    el.style.fontSize = size + 'rem';
+
+                    // Posição horizontal aleatória
+                    const left = Math.random() * 100;
+                    el.style.left = left + '%';
+
+                    // Duração da animação aleatória
+                    const duracao = 5 + Math.random() * 4;
+                    el.style.animationDuration = duracao + 's';
+
+                    // Atraso aleatório
+                    const delay = Math.random() * 2;
+                    el.style.animationDelay = delay + 's';
+
+                    // Rotação inicial aleatória
+                    const rot = Math.random() * 60 - 30;
+                    el.style.transform = `rotate(${rot}deg)`;
+
+                    coracoesContainer.appendChild(el);
+                    count++;
+
+                    // Agenda o próximo com intervalo aleatório
+                    const intervalo = 80 + Math.random() * 150;
+                    timeoutCoracoes = setTimeout(adicionarProximo, intervalo);
                 }
 
-                btnProximo.classList.add('active');
+                // Inicia a primeira leva
+                adicionarProximo();
+
+                // Depois de um tempo, se ainda estiver aberto, reinicia para manter corações
+                // Mas vamos deixar uma única leva, pois fica mais limpo
             }
 
-            function proximaPergunta() {
-                if (jogoFinalizado) return;
-                indiceAtual++;
-                if (indiceAtual >= perguntas.length) {
-                    finalizarJogo();
-                } else {
-                    carregarPergunta();
-                    msgExplosiva.style.background = "linear-gradient(135deg, #ffe6f0, #ffd9e8)";
-                    msgExplosiva.style.borderColor = "#ff99bb";
-                }
-            }
+            // Eventos para abrir
+            envelope.addEventListener('click', (e) => {
+                // Se clicou na carta (que está dentro do envelope), não impede
+                // Mas queremos que qualquer clique no envelope abra
+                abrirEnvelope();
+            });
 
-            function finalizarJogo() {
-                jogoFinalizado = true;
-                quizArea.classList.remove('active');
-                telaFinal.classList.add('active');
-                dispararConfetes();
-                setTimeout(dispararConfetes, 500);
-                setTimeout(dispararConfetes, 1000);
-            }
+            btnAbrir.addEventListener('click', (e) => {
+                e.stopPropagation();
+                abrirEnvelope();
+            });
 
-            function reiniciarJogo() {
-                telaFinal.classList.remove('active');
-                telaInicio.classList.remove('hidden');
-                quizArea.classList.remove('active');
-                msgExplosiva.classList.remove('active');
-                btnProximo.classList.remove('active');
-                indiceAtual = 0;
-                pontuacao = 0;
-                jogoFinalizado = false;
-                msgExplosiva.style.background = "linear-gradient(135deg, #ffe6f0, #ffd9e8)";
-                msgExplosiva.style.borderColor = "#ff99bb";
-            }
+            // Se o usuário clicar na carta, não fecha (mas não faz nada)
+            // já que o envelope abre e a carta aparece
 
-            // ---------- CONFETES ----------
-            function dispararConfetes() {
-                const defaults = {
-                    spread: 360,
-                    ticks: 60,
-                    gravity: 0.8,
-                    decay: 0.94,
-                    startVelocity: 25,
-                    colors: ['#ff6b9d', '#ff9a9e', '#fad0c4', '#ffd1ff', '#a18cd1', '#fbc2eb']
-                };
+            // Prevenção de comportamento padrão de arraste
+            envelope.addEventListener('dragstart', (e) => e.preventDefault());
 
-                function shoot() {
-                    confetti({
-                        ...defaults,
-                        particleCount: 30,
-                        scalar: 1.2,
-                        shapes: ['circle', 'square']
-                    });
-                    confetti({
-                        ...defaults,
-                        particleCount: 20,
-                        scalar: 0.8,
-                        shapes: ['text'],
-                        shapeOptions: {
-                            text: {
-                                value: ['❤️', '🌸', '✨', '💕', '🌟', '🩺'],
-                            }
-                        }
-                    });
-                }
-                shoot();
-                setTimeout(shoot, 200);
-                setTimeout(shoot, 400);
-            }
+            // (Opcional) Se quiser reabrir depois de fechar? Não, é uma experiência única.
 
-            // ---------- EVENTOS ----------
-            btnIniciar.addEventListener('click', iniciarJogo);
-            btnProximo.addEventListener('click', proximaPergunta);
-            btnReiniciar.addEventListener('click', reiniciarJogo);
-
-            // (Opcional) colocar a foto real: 
-            // fotoPerfil.src = "caminho/para/foto_dela.jpg";
-
+            console.log('💌 Cartinha carregada! Clique no envelope para abrir.');
         })();
     </script>
+
 </body>
 </html>
