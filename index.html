@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>💌 Para você</title>
+    <title>💌 Para você, futura enfermeira</title>
     <style>
-        /* Reset e estilo base */
+        /* ===== RESET E BASE ===== */
         * {
             margin: 0;
             padding: 0;
@@ -24,7 +24,6 @@
             overflow-x: hidden;
         }
 
-        /* Container principal */
         .container {
             position: relative;
             width: 100%;
@@ -34,7 +33,7 @@
             align-items: center;
         }
 
-        /* Envelope */
+        /* ===== ENVELOPE ===== */
         .envelope {
             position: relative;
             width: 100%;
@@ -47,11 +46,7 @@
             transform-origin: bottom;
             z-index: 2;
         }
-
-        .envelope:hover {
-            transform: scale(1.02);
-        }
-
+        .envelope:hover { transform: scale(1.02); }
         .envelope.aberto {
             transform: scale(0.95) translateY(-20px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
@@ -63,7 +58,6 @@
             background: #e8c9b5;
             transition: all 0.6s ease;
         }
-
         .envelope .aba-topo {
             top: 0;
             left: 0;
@@ -76,13 +70,11 @@
             transform-origin: top;
             transition: transform 0.6s ease, opacity 0.3s ease;
         }
-
         .envelope.aberto .aba-topo {
             transform: rotateX(180deg);
             opacity: 0;
             pointer-events: none;
         }
-
         .envelope .aba-lateral {
             bottom: 0;
             left: 0;
@@ -92,14 +84,13 @@
             background: #dbb8a2;
             border-radius: 0 0 0 6px;
         }
-
         .envelope .aba-lateral.direita {
             left: 50%;
             clip-path: polygon(0 0, 100% 0, 50% 100%);
             border-radius: 0 0 6px 0;
         }
 
-        /* Coração no envelope */
+        /* Selo coração */
         .envelope .selo {
             position: absolute;
             top: 40%;
@@ -108,15 +99,14 @@
             font-size: 2.8rem;
             z-index: 4;
             filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-            transition: transform 0.6s ease;
+            transition: transform 0.6s ease, opacity 0.3s ease;
         }
-
         .envelope.aberto .selo {
             transform: translate(-50%, -50%) scale(0) rotate(180deg);
             opacity: 0;
         }
 
-        /* Carta (dentro do envelope) */
+        /* ===== CARTA (com marca d'água) ===== */
         .carta {
             position: absolute;
             top: 8%;
@@ -135,8 +125,18 @@
             opacity: 0;
             transform: scale(0.8) translateY(20px);
             pointer-events: none;
+
+            /* --- MARCA D'ÁGUA (imagem de fundo) --- */
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.10"><text x="50" y="50" font-size="80" text-anchor="middle" dominant-baseline="central" fill="%23d63384">🩺</text></svg>');
+            background-repeat: repeat;
+            background-size: 80px 80px;
+            background-position: center;
+            /* Se quiser usar uma foto REAL, troque a linha acima por:
+               background-image: url('caminho/para/sua-foto.jpg');
+               e ajuste o background-size, opacity etc. */
         }
 
+        /* Quando aberta, a carta aparece e a marca d'água fica visível */
         .envelope.aberto .carta {
             opacity: 1;
             transform: scale(1) translateY(0);
@@ -156,38 +156,43 @@
             border-radius: 4px;
         }
 
+        /* ===== CONTEÚDO DA CARTA ===== */
         .carta h1 {
             font-size: 1.6rem;
             color: #d63384;
             margin-bottom: 6px;
             font-weight: 600;
             letter-spacing: -0.5px;
+            position: relative;
+            z-index: 2; /* garante que fique acima da marca d'água */
         }
-
         .carta .subtitulo {
             font-size: 0.9rem;
             color: #ad6a8c;
             margin-bottom: 16px;
             border-bottom: 2px dashed #f3d9e8;
             padding-bottom: 10px;
+            position: relative;
+            z-index: 2;
         }
-
         .carta .mensagem {
             font-size: 1rem;
             line-height: 1.7;
             color: #4a2c3a;
             flex: 1;
+            position: relative;
+            z-index: 2;
         }
-
         .carta .mensagem p {
             margin-bottom: 12px;
         }
-
         .carta .mensagem .destaque {
             color: #d63384;
             font-weight: 500;
         }
-
+        .carta .mensagem .emoji-enfermagem {
+            font-size: 1.2rem;
+        }
         .carta .assinatura {
             margin-top: 16px;
             text-align: right;
@@ -195,15 +200,16 @@
             color: #7a4b6a;
             border-top: 1px solid #f3d9e8;
             padding-top: 12px;
+            position: relative;
+            z-index: 2;
         }
-
         .carta .assinatura span {
             display: block;
             font-size: 0.85rem;
             color: #b07a9a;
         }
 
-        /* Botão de ação */
+        /* ===== BOTÃO ===== */
         .btn-acao {
             margin-top: 24px;
             padding: 12px 32px;
@@ -220,22 +226,33 @@
             z-index: 6;
             position: relative;
         }
-
         .btn-acao:hover {
             transform: translateY(-3px) scale(1.02);
             box-shadow: 0 10px 28px rgba(214, 51, 132, 0.5);
             background: #c22a75;
         }
+        .btn-acao:active { transform: scale(0.96); }
+        .btn-acao.oculto { display: none; }
 
-        .btn-acao:active {
-            transform: scale(0.96);
+        .instrucao {
+            margin-top: 12px;
+            color: #7a4b6a;
+            font-weight: 500;
+            font-size: 0.95rem;
+            opacity: 0.8;
+            transition: opacity 0.4s;
+        }
+        .instrucao.oculto { opacity: 0; }
+
+        .footer-msg {
+            margin-top: 20px;
+            color: #a06a8a;
+            font-size: 0.75rem;
+            opacity: 0.6;
+            text-align: center;
         }
 
-        .btn-acao.oculto {
-            display: none;
-        }
-
-        /* Corações flutuantes (partículas) */
+        /* ===== CORAÇÕES FLUTUANTES ===== */
         .coracoes-container {
             position: fixed;
             top: 0;
@@ -246,7 +263,6 @@
             z-index: 9999;
             overflow: hidden;
         }
-
         .coracao-particle {
             position: absolute;
             font-size: 1.8rem;
@@ -254,7 +270,6 @@
             opacity: 0;
             user-select: none;
         }
-
         @keyframes subir {
             0% {
                 opacity: 0;
@@ -270,107 +285,76 @@
             }
         }
 
-        /* Responsividade */
+        /* ===== RESPONSIVO ===== */
         @media (max-width: 480px) {
-            .envelope {
-                max-width: 100%;
-            }
-            .carta h1 {
-                font-size: 1.3rem;
-            }
-            .carta .mensagem {
-                font-size: 0.9rem;
-            }
-            .envelope .selo {
-                font-size: 2.2rem;
-            }
-        }
-
-        /* Estilo do texto do botão de abrir */
-        .instrucao {
-            margin-top: 12px;
-            color: #7a4b6a;
-            font-weight: 500;
-            font-size: 0.95rem;
-            opacity: 0.8;
-            transition: opacity 0.4s;
-        }
-
-        .instrucao.oculto {
-            opacity: 0;
-        }
-
-        /* Pequeno toque extra */
-        .footer-msg {
-            margin-top: 20px;
-            color: #a06a8a;
-            font-size: 0.75rem;
-            opacity: 0.6;
-            text-align: center;
+            .envelope { max-width: 100%; }
+            .carta h1 { font-size: 1.3rem; }
+            .carta .mensagem { font-size: 0.9rem; }
+            .envelope .selo { font-size: 2.2rem; }
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Envelope -->
+        <!-- ENVELOPE -->
         <div class="envelope" id="envelope">
-            <!-- Abas -->
             <div class="aba aba-topo"></div>
             <div class="aba aba-lateral"></div>
             <div class="aba aba-lateral direita"></div>
-
-            <!-- Selo (coração) -->
             <div class="selo">❤️</div>
 
-            <!-- Carta (o conteúdo) -->
+            <!-- CARTA -->
             <div class="carta" id="carta">
-                <h1>💕 Para você</h1>
-                <div class="subtitulo">✨ uma mensagem especial ✨</div>
+                <h1>💕 Para você, <br>minha futura enfermeira</h1>
+                <div class="subtitulo">✨ com muito carinho e admiração ✨</div>
                 <div class="mensagem">
                     <p>
-                        Oi, <span class="destaque">[Nome da sua amiga]</span>!
+                        Oi, <span class="destaque">[Ana]</span>!
                     </p>
                     <p>
-                        Eu queria te escrever dessa forma um pouco diferente,
-                        porque você merece algo mais que uma simples mensagem.
+                        <span class="emoji-enfermagem">🩺</span> Sei que você está
+                        mergulhada nos estudos de <strong>enfermagem</strong>, e isso
+                        me faz admirar você ainda mais. Cuidar dos outros é uma das
+                        profissões mais lindas que existem, e tenho certeza de que
+                        você vai brilhar nessa jornada.
                     </p>
                     <p>
-                        <span class="destaque">☀️</span> Seu sorriso ilumina
-                        meu dia de um jeito que eu nem sabia ser possível.
-                        Cada conversa nossa é um pedacinho de felicidade que
-                        guardo com carinho.
+                        <span class="destaque">☀️</span> Mesmo com a correria, você
+                        sempre arruma um tempinho para conversar comigo, e cada
+                        mensagem sua ilumina meu dia. É tão bom conhecer alguém tão
+                        dedicada, gentil e com um sorriso que me desarma.
                     </p>
                     <p>
-                        <span class="destaque">🌸</span> Não sei se você já
-                        percebeu, mas eu fico todo bobo quando estou perto de
-                        você. E é por isso que estou aqui, tentando conquistar
-                        seu coração com essa cartinha virtual.
+                        <span class="destaque">🌸</span> Eu sei que ainda estamos nos
+                        conhecendo, mas já sinto que você é especial. Essa cartinha é
+                        um jeito carinhoso de dizer que estou torcendo por você, nos
+                        estudos e na vida.
                     </p>
                     <p>
-                        <span class="destaque">💫</span> Espero que você goste
-                        e que possamos construir muitos momentos juntos.
-                        Você é especial demais para ser só mais uma amiga.
+                        <span class="destaque">💫</span> Espero que possamos
+                        compartilhar muitos momentos juntos — mesmo que seja por
+                        chamada de vídeo ou mensagem. E quem sabe, um dia, eu possa
+                        te levar para um café e ouvir todas as histórias do seu dia.
                     </p>
                     <p style="margin-top: 8px;">
-                        Com todo carinho,
+                        Com todo o carinho de um amigo,
                     </p>
                 </div>
                 <div class="assinatura">
-                    💌 <strong>De alguém que te admira</strong>
-                    <span>— [Seu nome]</span>
+                    💌 <strong>De alguém que já te admira</strong>
+                    <span>— [Fabio Resende]</span>
                 </div>
             </div>
         </div>
 
-        <!-- Botão para abrir / interagir -->
+        <!-- BOTÃO -->
         <button class="btn-acao" id="btnAbrir">💖 Abrir cartinha</button>
         <p class="instrucao" id="instrucao">Clique no envelope ou no botão</p>
-
         <div class="footer-msg">Feito com 💕 para você</div>
     </div>
 
-    <!-- Container para os corações flutuantes -->
+    <!-- CORAÇÕES -->
     <div class="coracoes-container" id="coracoesContainer"></div>
 
     <script>
@@ -380,121 +364,65 @@
             const instrucao = document.getElementById('instrucao');
             const coracoesContainer = document.getElementById('coracoesContainer');
 
-            // Lista de emojis de coração/amor
-            const coracoes = ['❤️', '💕', '💖', '💗', '💓', '💝', '✨', '🌸', '🌺', '💘'];
+            const coracoes = ['❤️', '💕', '💖', '💗', '💓', '💝', '✨', '🌸', '🌺', '💘', '🩺', '💉'];
 
             let aberto = false;
             let timeoutCoracoes = null;
 
-            // Função para abrir o envelope
             function abrirEnvelope() {
                 if (aberto) return;
                 aberto = true;
-
-                // Adiciona classe de aberto
                 envelope.classList.add('aberto');
-
-                // Muda o botão
                 btnAbrir.textContent = '💌 Já abriu!';
                 btnAbrir.classList.add('oculto');
                 instrucao.classList.add('oculto');
-
-                // Dispara corações
                 dispararCoracoes();
-
-                // (Opcional) tocar um som? Não temos, mas podemos só vibrar se suportado
                 if (navigator.vibrate) navigator.vibrate(30);
             }
 
-            // Função que gera corações flutuando
             function dispararCoracoes() {
-                // Limpa qualquer timeout anterior
                 if (timeoutCoracoes) {
                     clearTimeout(timeoutCoracoes);
                     timeoutCoracoes = null;
                 }
-
-                // Remove corações antigos (mas com transição suave, só removemos depois)
-                // Vamos limpar o container e adicionar novos em ondas
                 coracoesContainer.innerHTML = '';
-
-                // Número de corações
-                const total = 35;
+                const total = 40;
                 let count = 0;
 
                 function adicionarProximo() {
                     if (count >= total) {
-                        // Depois de um tempo, limpa tudo para não acumular
                         timeoutCoracoes = setTimeout(() => {
                             coracoesContainer.innerHTML = '';
                             timeoutCoracoes = null;
                         }, 7000);
                         return;
                     }
-
                     const el = document.createElement('div');
                     el.classList.add('coracao-particle');
-
-                    // Escolhe um coração aleatório
                     const emoji = coracoes[Math.floor(Math.random() * coracoes.length)];
                     el.textContent = emoji;
-
-                    // Tamanho aleatório
                     const size = 1.2 + Math.random() * 1.8;
                     el.style.fontSize = size + 'rem';
-
-                    // Posição horizontal aleatória
-                    const left = Math.random() * 100;
-                    el.style.left = left + '%';
-
-                    // Duração da animação aleatória
+                    el.style.left = Math.random() * 100 + '%';
                     const duracao = 5 + Math.random() * 4;
                     el.style.animationDuration = duracao + 's';
-
-                    // Atraso aleatório
-                    const delay = Math.random() * 2;
-                    el.style.animationDelay = delay + 's';
-
-                    // Rotação inicial aleatória
+                    el.style.animationDelay = Math.random() * 2 + 's';
                     const rot = Math.random() * 60 - 30;
                     el.style.transform = `rotate(${rot}deg)`;
-
                     coracoesContainer.appendChild(el);
                     count++;
-
-                    // Agenda o próximo com intervalo aleatório
                     const intervalo = 80 + Math.random() * 150;
                     timeoutCoracoes = setTimeout(adicionarProximo, intervalo);
                 }
-
-                // Inicia a primeira leva
                 adicionarProximo();
-
-                // Depois de um tempo, se ainda estiver aberto, reinicia para manter corações
-                // Mas vamos deixar uma única leva, pois fica mais limpo
             }
 
-            // Eventos para abrir
-            envelope.addEventListener('click', (e) => {
-                // Se clicou na carta (que está dentro do envelope), não impede
-                // Mas queremos que qualquer clique no envelope abra
-                abrirEnvelope();
-            });
-
+            envelope.addEventListener('click', abrirEnvelope);
             btnAbrir.addEventListener('click', (e) => {
                 e.stopPropagation();
                 abrirEnvelope();
             });
-
-            // Se o usuário clicar na carta, não fecha (mas não faz nada)
-            // já que o envelope abre e a carta aparece
-
-            // Prevenção de comportamento padrão de arraste
             envelope.addEventListener('dragstart', (e) => e.preventDefault());
-
-            // (Opcional) Se quiser reabrir depois de fechar? Não, é uma experiência única.
-
-            console.log('💌 Cartinha carregada! Clique no envelope para abrir.');
         })();
     </script>
 
