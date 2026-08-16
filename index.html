@@ -2,10 +2,14 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>💌 Para você, futura enfermeira</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#1a3c5e" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>Recibo de Aluguel</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧾</text></svg>" />
     <style>
-        /* ===== RESET E BASE ===== */
+        /* ===== RESET E ESTILOS GERAIS ===== */
         * {
             margin: 0;
             padding: 0;
@@ -13,416 +17,750 @@
         }
 
         body {
-            min-height: 100vh;
+            font-family: 'Times New Roman', serif;
+            background: #f2f2f2;
+            padding: 16px;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            background: linear-gradient(135deg, #fce4ec, #f8bbd0, #f48fb1);
-            font-family: 'Segoe UI', 'Arial', sans-serif;
-            padding: 20px;
-            margin: 0;
-            overflow-x: hidden;
+            min-height: 100vh;
         }
 
         .container {
-            position: relative;
+            max-width: 800px;
             width: 100%;
-            max-width: 500px;
+            background: #fff;
+            padding: 16px 18px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            text-align: center;
+            color: #1a3c5e;
+            margin-bottom: 14px;
+            font-family: Arial, sans-serif;
+        }
+
+        /* ===== FORMULÁRIO ===== */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 16px;
+        }
+
+        .form-group {
             display: flex;
             flex-direction: column;
-            align-items: center;
         }
 
-        /* ===== ENVELOPE ===== */
-        .envelope {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 1.2 / 1;
-            background: #f9e4d4;
-            border-radius: 12px 12px 6px 6px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
-            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-            transform-origin: bottom;
-            z-index: 2;
-        }
-        .envelope:hover { transform: scale(1.02); }
-        .envelope.aberto {
-            transform: scale(0.95) translateY(-20px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        /* Abas do envelope */
-        .envelope .aba {
-            position: absolute;
-            background: #e8c9b5;
-            transition: all 0.6s ease;
-        }
-        .envelope .aba-topo {
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 50%;
-            clip-path: polygon(0 0, 50% 100%, 100% 0);
-            background: #e8c9b5;
-            border-radius: 12px 12px 0 0;
-            z-index: 3;
-            transform-origin: top;
-            transition: transform 0.6s ease, opacity 0.3s ease;
-        }
-        .envelope.aberto .aba-topo {
-            transform: rotateX(180deg);
-            opacity: 0;
-            pointer-events: none;
-        }
-        .envelope .aba-lateral {
-            bottom: 0;
-            left: 0;
-            width: 50%;
-            height: 50%;
-            clip-path: polygon(0 0, 100% 0, 50% 100%);
-            background: #dbb8a2;
-            border-radius: 0 0 0 6px;
-        }
-        .envelope .aba-lateral.direita {
-            left: 50%;
-            clip-path: polygon(0 0, 100% 0, 50% 100%);
-            border-radius: 0 0 6px 0;
-        }
-
-        /* Selo coração */
-        .envelope .selo {
-            position: absolute;
-            top: 40%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 2.8rem;
-            z-index: 4;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-            transition: transform 0.6s ease, opacity 0.3s ease;
-        }
-        .envelope.aberto .selo {
-            transform: translate(-50%, -50%) scale(0) rotate(180deg);
-            opacity: 0;
-        }
-
-        /* ===== CARTA (com marca d'água) ===== */
-        .carta {
-            position: absolute;
-            top: 8%;
-            left: 6%;
-            width: 88%;
-            height: 84%;
-            background: #fffdf9;
-            border-radius: 8px;
-            padding: 20px 18px;
-            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.04);
-            z-index: 1;
-            overflow-y: auto;
-            transition: all 0.8s ease;
-            display: flex;
-            flex-direction: column;
-            opacity: 0;
-            transform: scale(0.8) translateY(20px);
-            pointer-events: none;
-
-            /* --- MARCA D'ÁGUA (imagem de fundo) --- */
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.10"><text x="50" y="50" font-size="80" text-anchor="middle" dominant-baseline="central" fill="%23d63384">🩺</text></svg>');
-            background-repeat: repeat;
-            background-size: 80px 80px;
-            background-position: center;
-            /* Se quiser usar uma foto REAL, troque a linha acima por:
-               background-image: url('caminho/para/sua-foto.jpg');
-               e ajuste o background-size, opacity etc. */
-        }
-
-        /* Quando aberta, a carta aparece e a marca d'água fica visível */
-        .envelope.aberto .carta {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-            pointer-events: auto;
-            z-index: 5;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-        }
-
-        .carta::-webkit-scrollbar {
-            width: 4px;
-        }
-        .carta::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .carta::-webkit-scrollbar-thumb {
-            background: #e8c9b5;
-            border-radius: 4px;
-        }
-
-        /* ===== CONTEÚDO DA CARTA ===== */
-        .carta h1 {
-            font-size: 1.6rem;
-            color: #d63384;
-            margin-bottom: 6px;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-            position: relative;
-            z-index: 2; /* garante que fique acima da marca d'água */
-        }
-        .carta .subtitulo {
-            font-size: 0.9rem;
-            color: #ad6a8c;
-            margin-bottom: 16px;
-            border-bottom: 2px dashed #f3d9e8;
-            padding-bottom: 10px;
-            position: relative;
-            z-index: 2;
-        }
-        .carta .mensagem {
-            font-size: 1rem;
-            line-height: 1.7;
-            color: #4a2c3a;
-            flex: 1;
-            position: relative;
-            z-index: 2;
-        }
-        .carta .mensagem p {
-            margin-bottom: 12px;
-        }
-        .carta .mensagem .destaque {
-            color: #d63384;
-            font-weight: 500;
-        }
-        .carta .mensagem .emoji-enfermagem {
-            font-size: 1.2rem;
-        }
-        .carta .assinatura {
-            margin-top: 16px;
-            text-align: right;
-            font-style: italic;
-            color: #7a4b6a;
-            border-top: 1px solid #f3d9e8;
-            padding-top: 12px;
-            position: relative;
-            z-index: 2;
-        }
-        .carta .assinatura span {
-            display: block;
-            font-size: 0.85rem;
-            color: #b07a9a;
-        }
-
-        /* ===== BOTÃO ===== */
-        .btn-acao {
-            margin-top: 24px;
-            padding: 12px 32px;
-            background: #d63384;
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            box-shadow: 0 6px 20px rgba(214, 51, 132, 0.4);
-            transition: all 0.3s ease;
-            z-index: 6;
-            position: relative;
-        }
-        .btn-acao:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 10px 28px rgba(214, 51, 132, 0.5);
-            background: #c22a75;
-        }
-        .btn-acao:active { transform: scale(0.96); }
-        .btn-acao.oculto { display: none; }
-
-        .instrucao {
-            margin-top: 12px;
-            color: #7a4b6a;
-            font-weight: 500;
-            font-size: 0.95rem;
-            opacity: 0.8;
-            transition: opacity 0.4s;
-        }
-        .instrucao.oculto { opacity: 0; }
-
-        .footer-msg {
-            margin-top: 20px;
-            color: #a06a8a;
+        .form-group label {
+            font-weight: bold;
             font-size: 0.75rem;
-            opacity: 0.6;
+            color: #333;
+            margin-bottom: 2px;
+            font-family: Arial, sans-serif;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 5px 7px;
+            border: 1px solid #bbb;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            font-family: 'Times New Roman', serif;
+            background: #fafafa;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: 2px solid #1a3c5e;
+            border-color: transparent;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .btn-gerar {
+            grid-column: span 2;
+            padding: 10px;
+            background: #1a3c5e;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: Arial, sans-serif;
+            margin-top: 4px;
+        }
+
+        .btn-gerar:hover {
+            background: #0f2a44;
+            transform: scale(1.01);
+        }
+        .btn-gerar:active {
+            transform: scale(0.97);
+        }
+
+        /* ===== RECIBO GERADO (compacto) ===== */
+        .recibo-area {
+            margin-top: 20px;
+            padding-top: 12px;
+            border-top: 2px dashed #ccc;
+        }
+
+        .recibo {
+            background: #fff;
+            border: 2px solid #1a3c5e;
+            border-radius: 6px;
+            padding: 14px 16px;
+            font-size: 0.78rem;
+            line-height: 1.35;
+            color: #000;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        .recibo .titulo-principal {
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: #1a3c5e;
+            margin-bottom: 5px;
+        }
+
+        .recibo .num-data {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            margin-bottom: 8px;
+        }
+
+        .recibo .num-data span {
+            font-weight: bold;
+        }
+
+        .recibo .dados-linha {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 3px;
+            flex-wrap: wrap;
+        }
+
+        .recibo .dados-linha strong {
+            display: inline-block;
+            min-width: 65px;
+            font-size: 0.78rem;
+        }
+
+        .recibo .dados-linha .valor {
+            font-weight: normal;
+        }
+
+        .recibo .subtitulo {
+        background-color: #e2eae5;
+            font-weight: bold;
+            font-size: 0.85rem;
+            margin: 10px 0 4px 0;
+            text-decoration: underline;
+            color: #1a3c5e;
+           display: flex;
+            justify-content: space-between;
+        }
+
+        .recibo table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 6px 0;
+            font-size: 0.7rem;
+        }
+
+        .recibo table th {
+            background: #e6edf5;
+            border: 1px solid #333;
+            padding: 3px 2px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .recibo table td {
+            border: 1px solid #333;
+            padding: 3px 2px;
             text-align: center;
         }
 
-        /* ===== CORAÇÕES FLUTUANTES ===== */
-        .coracoes-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 9999;
-            overflow: hidden;
+        .recibo .valor-recebido {
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            
         }
-        .coracao-particle {
-            position: absolute;
-            font-size: 1.8rem;
-            animation: subir 6s ease-in forwards;
-            opacity: 0;
-            user-select: none;
+
+
+        .recibo .data-assinatura {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 14px;
+            align-items: flex-end;
+            flex-wrap: wrap;
         }
-        @keyframes subir {
-            0% {
-                opacity: 0;
-                transform: translateY(100vh) scale(0.3) rotate(0deg);
-            }
-            20% {
-                opacity: 1;
-                transform: translateY(80vh) scale(1) rotate(10deg);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(-10vh) scale(0.8) rotate(-20deg);
-            }
+
+        .recibo .data-assinatura .local-data {
+            font-size: 0.78rem;
+        }
+
+        .recibo .data-assinatura .assinatura {
+            text-align: center;
+            min-width: 130px;
+        }
+
+        .recibo .data-assinatura .assinatura .linha {
+            width: 250px;
+            border-top: 1px solid #000;
+            margin: 16px auto 3px auto;
+        }
+
+        .recibo .data-assinatura .assinatura .legenda {
+            font-size: 0.7rem;
+        }
+
+        /* ===== BOTÃO IMPRIMIR ===== */
+        .btn-imprimir {
+            display: inline-block;
+            margin: 12px auto 0;
+            padding: 8px 22px;
+            background: #2d7d46;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: Arial, sans-serif;
+        }
+
+        .btn-imprimir:hover {
+            background: #1e5f33;
+        }
+        .btn-imprimir:active {
+            transform: scale(0.96);
+        }
+
+        .recibo-actions {
+            text-align: center;
+            margin-top: 10px;
         }
 
         /* ===== RESPONSIVO ===== */
-        @media (max-width: 480px) {
-            .envelope { max-width: 100%; }
-            .carta h1 { font-size: 1.3rem; }
-            .carta .mensagem { font-size: 0.9rem; }
-            .envelope .selo { font-size: 2.2rem; }
+        @media (max-width: 700px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            .btn-gerar {
+                grid-column: span 1;
+            }
+            .recibo {
+                padding: 12px 10px;
+                font-size: 0.72rem;
+            }
+            .recibo .titulo-principal {
+                font-size: 1.1rem;
+            }
+            .recibo .data-assinatura {
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+            .recibo .data-assinatura .assinatura .linha {
+                width: 110px;
+            }
+        }
+
+        /* ===== ESTILO PARA IMPRESSÃO (meia página A4) ===== */
+        @media print {
+            body {
+                background: #fff !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                display: block !important;
+            }
+            .container {
+                box-shadow: none !important;
+                padding: 0 !important;
+                border-radius: 0 !important;
+                max-width: 100% !important;
+                background: #fff !important;
+                margin: 0 !important;
+            }
+            .form-grid,
+            .btn-gerar,
+            .btn-imprimir,
+            .recibo-actions,
+            h1 {
+                display: none !important;
+            }
+            .recibo-area {
+                border-top: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                min-height: 100vh !important;
+            }
+            .recibo {
+                border: 2px solid #000 !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                padding: 12px 16px !important;
+                max-width: 550px !important;
+                width: 90% !important;
+                font-size: 0.72rem !important;
+                margin: 20px auto !important;
+                page-break-after: avoid !important;
+                page-break-inside: avoid !important;
+                max-height: 70vh !important;
+                overflow: hidden !important;
+            }
+            .recibo .titulo-principal {
+                font-size: 1.2rem !important;
+            }
+            .recibo table {
+                font-size: 0.65rem !important;
+            }
+            .recibo .data-assinatura .assinatura .linha {
+                width: 120px !important;
+            }
+        }
+
+        /* ===== TOAST (notificação) ===== */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a3c5e;
+            color: #fff;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-family: Arial, sans-serif;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            opacity: 0;
+            transition: opacity 0.4s;
+            pointer-events: none;
+            z-index: 999;
+        }
+        .toast.show {
+            opacity: 1;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- ENVELOPE -->
-        <div class="envelope" id="envelope">
-            <div class="aba aba-topo"></div>
-            <div class="aba aba-lateral"></div>
-            <div class="aba aba-lateral direita"></div>
-            <div class="selo">❤️</div>
+        <h1>🧾 Gerador de Recibo</h1>
 
-            <!-- CARTA -->
-            <div class="carta" id="carta">
-                <h1>💕 Para você, <br>minha futura enfermeira</h1>
-                <div class="subtitulo">✨ com muito carinho e admiração ✨</div>
-                <div class="mensagem">
-                    <p>
-                        Oi, <span class="destaque">[Ana]</span>!
-                    </p>
-                    <p>
-                        <span class="emoji-enfermagem">🩺</span> Sei que você está
-                        mergulhada nos estudos de <strong>enfermagem</strong>, e isso
-                        me faz admirar você ainda mais. Cuidar dos outros é uma das
-                        profissões mais lindas que existem, e tenho certeza de que
-                        você vai brilhar nessa jornada.
-                    </p>
-                    <p>
-                        <span class="destaque">☀️</span> Mesmo com a correria, você
-                        sempre arruma um tempinho para conversar comigo, e cada
-                        mensagem sua ilumina meu dia. É tão bom conhecer alguém tão
-                        dedicada, gentil e com um sorriso que me desarma.
-                    </p>
-                    <p>
-                        <span class="destaque">🌸</span> Eu sei que ainda estamos nos
-                        conhecendo, mas já sinto que você é especial. Essa cartinha é
-                        um jeito carinhoso de dizer que estou torcendo por você, nos
-                        estudos e na vida.
-                    </p>
-                    <p>
-                        <span class="destaque">💫</span> Espero que possamos
-                        compartilhar muitos momentos juntos — mesmo que seja por
-                        chamada de vídeo ou mensagem. E quem sabe, um dia, eu possa
-                        te levar para um café e ouvir todas as histórias do seu dia.
-                    </p>
-                    <p style="margin-top: 8px;">
-                        Com todo o carinho de um amigo,
-                    </p>
-                </div>
-                <div class="assinatura">
-                    💌 <strong>De alguém que já te admira</strong>
-                    <span>— [Fabio Resende]</span>
+        <!-- FORMULÁRIO -->
+        <form id="formRecibo" class="form-grid">
+            <div class="form-group">
+                <label for="numRecibo">Nº do Recibo</label>
+                <input type="text" id="numRecibo" value="002/2026" />
+            </div>
+            <div class="form-group">
+                <label for="dataRecibo">Data do Recibo</label>
+                <input type="date" id="dataRecibo" />
+            </div>
+
+            <div class="form-group">
+                <label for="locador">Locador</label>
+                <input type="text" id="locador" placeholder="Nome do locador" />
+            </div>
+            <div class="form-group">
+                <label for="locatario">Locatário</label>
+                <input type="text" id="locatario" placeholder="Nome do locatário" />
+            </div>
+
+            <div class="form-group full-width">
+                <label for="imovel">Imóvel</label>
+                <input type="text" id="imovel" value="Ponto Comercial nº 02" />
+            </div>
+
+            <div class="form-group">
+                <label for="valorAluguel">Valor mensal (R$)</label>
+                <input type="number" id="valorAluguel" value="500.00" step="0.01" min="0" />
+            </div>
+            <div class="form-group">
+                <label for="diaVencimento">Vencimento (dia)</label>
+                <input type="number" id="diaVencimento" value="19" min="1" max="31" />
+            </div>
+
+            <div class="form-group">
+                <label for="medidor">Nº do medidor</label>
+                <input type="text" id="medidor" value="002" />
+            </div>
+            <div class="form-group">
+                <label for="leituraAtual">Leitura atual (kWh)</label>
+                <input type="number" id="leituraAtual" value="0" step="1" min="0" />
+            </div>
+            <div class="form-group">
+                <label for="leituraAnterior">Leitura anterior (kWh)</label>
+                <input type="number" id="leituraAnterior" value="0" step="1" min="0" />
+            </div>
+            <div class="form-group">
+                <label for="tarifa">Tarifa (R$/kWh)</label>
+                <input type="number" id="tarifa" value="0.875710" step="0.000001" />
+            </div>
+
+            <div class="form-group">
+                <label for="periodoInicio">Período de (data)</label>
+                <input type="date" id="periodoInicio" />
+            </div>
+            <div class="form-group">
+                <label for="periodoFim">até (data)</label>
+                <input type="date" id="periodoFim" />
+            </div>
+
+            <div class="form-group full-width">
+                <label>Forma de pagamento</label>
+                <div style="display: flex; gap: 16px; flex-wrap: wrap; padding: 4px 0;">
+                    <label><input type="checkbox" id="pagDinheiro" /> Dinheiro</label>
+                    <label><input type="checkbox" id="pagPix" /> Pix</label>
+                    <label><input type="checkbox" id="pagTransferencia" /> Transferência</label>
                 </div>
             </div>
-        </div>
 
-        <!-- BOTÃO -->
-        <button class="btn-acao" id="btnAbrir">💖 Abrir cartinha</button>
-        <p class="instrucao" id="instrucao">Clique no envelope ou no botão</p>
-        <div class="footer-msg">Feito com 💕 para você</div>
+            <div class="form-group">
+                <label for="cidade">Cidade</label>
+                <input type="text" id="cidade" value="Novo Remanso" />
+            </div>
+            <div class="form-group">
+                <label for="dataAssinatura">Data de assinatura</label>
+                <input type="date" id="dataAssinatura" />
+            </div>
+
+            <button type="button" class="btn-gerar" id="btnGerar">📄 Gerar Recibo</button>
+        </form>
+
+        <!-- ÁREA DO RECIBO GERADO -->
+        <div class="recibo-area" id="reciboArea">
+            <div class="recibo" id="recibo"></div>
+            <div class="recibo-actions">
+                <button class="btn-imprimir" id="btnImprimir">🖨️ Imprimir / PDF</button>
+            </div>
+        </div>
     </div>
 
-    <!-- CORAÇÕES -->
-    <div class="coracoes-container" id="coracoesContainer"></div>
+    <!-- Toast (notificação de instalação) -->
+    <div class="toast" id="toast">📲 Instale este app para usar offline</div>
 
     <script>
         (function() {
-            const envelope = document.getElementById('envelope');
-            const btnAbrir = document.getElementById('btnAbrir');
-            const instrucao = document.getElementById('instrucao');
-            const coracoesContainer = document.getElementById('coracoesContainer');
+            // === REFERÊNCIAS ===
+            const numRecibo = document.getElementById('numRecibo');
+            const dataRecibo = document.getElementById('dataRecibo');
+            const locador = document.getElementById('locador');
+            const locatario = document.getElementById('locatario');
+            const imovel = document.getElementById('imovel');
+            const valorAluguel = document.getElementById('valorAluguel');
+            const diaVencimento = document.getElementById('diaVencimento');
+            const medidor = document.getElementById('medidor');
+            const leituraAtual = document.getElementById('leituraAtual');
+            const leituraAnterior = document.getElementById('leituraAnterior');
+            const tarifa = document.getElementById('tarifa');
+            const periodoInicio = document.getElementById('periodoInicio');
+            const periodoFim = document.getElementById('periodoFim');
+            const pagDinheiro = document.getElementById('pagDinheiro');
+            const pagPix = document.getElementById('pagPix');
+            const pagTransferencia = document.getElementById('pagTransferencia');
+            const cidade = document.getElementById('cidade');
+            const dataAssinatura = document.getElementById('dataAssinatura');
+            const btnGerar = document.getElementById('btnGerar');
+            const reciboDiv = document.getElementById('recibo');
+            const btnImprimir = document.getElementById('btnImprimir');
+            const toast = document.getElementById('toast');
 
-            const coracoes = ['❤️', '💕', '💖', '💗', '💓', '💝', '✨', '🌸', '🌺', '💘', '🩺', '💉'];
-
-            let aberto = false;
-            let timeoutCoracoes = null;
-
-            function abrirEnvelope() {
-                if (aberto) return;
-                aberto = true;
-                envelope.classList.add('aberto');
-                btnAbrir.textContent = '💌 Já abriu!';
-                btnAbrir.classList.add('oculto');
-                instrucao.classList.add('oculto');
-                dispararCoracoes();
-                if (navigator.vibrate) navigator.vibrate(30);
+            // === FUNÇÕES AUXILIARES ===
+            function formatarData(dataStr) {
+                if (!dataStr) return '____/____/____';
+                const partes = dataStr.split('-');
+                return `${partes[2]}/${partes[1]}/${partes[0]}`;
             }
 
-            function dispararCoracoes() {
-                if (timeoutCoracoes) {
-                    clearTimeout(timeoutCoracoes);
-                    timeoutCoracoes = null;
-                }
-                coracoesContainer.innerHTML = '';
-                const total = 40;
-                let count = 0;
+            function formatarMoeda(valor) {
+                return 'R$ ' + parseFloat(valor).toFixed(2).replace('.', ',');
+            }
 
-                function adicionarProximo() {
-                    if (count >= total) {
-                        timeoutCoracoes = setTimeout(() => {
-                            coracoesContainer.innerHTML = '';
-                            timeoutCoracoes = null;
-                        }, 7000);
-                        return;
+            function escreverPorExtenso(valor) {
+                const inteiro = Math.floor(valor);
+                if (inteiro === 0) return 'zero reais';
+                const unidades = ['', 'um', 'dois', 'três', 'quatro', 'cinco', 'seis', 'sete', 'oito', 'nove'];
+                const dezenas = ['', 'dez', 'vinte', 'trinta', 'quarenta', 'cinquenta', 'sessenta', 'setenta', 'oitenta', 'noventa'];
+                const centenas = ['', 'cem', 'duzentos', 'trezentos', 'quatrocentos', 'quinhentos', 'seiscentos', 'setecentos', 'oitocentos', 'novecentos'];
+
+                let extenso = '';
+                const cent = Math.floor(inteiro / 100);
+                const resto = inteiro % 100;
+                const dez = Math.floor(resto / 10);
+                const uni = resto % 10;
+
+                if (cent > 0) {
+                    extenso += centenas[cent];
+                    if (resto > 0) extenso += ' e ';
+                }
+                if (dez > 0) {
+                    if (dez === 1 && uni > 0) {
+                        const especiais = ['', 'onze', 'doze', 'treze', 'catorze', 'quinze', 'dezesseis', 'dezessete', 'dezoito', 'dezenove'];
+                        extenso += especiais[uni];
+                    } else {
+                        extenso += dezenas[dez];
+                        if (uni > 0) extenso += ' e ' + unidades[uni];
                     }
-                    const el = document.createElement('div');
-                    el.classList.add('coracao-particle');
-                    const emoji = coracoes[Math.floor(Math.random() * coracoes.length)];
-                    el.textContent = emoji;
-                    const size = 1.2 + Math.random() * 1.8;
-                    el.style.fontSize = size + 'rem';
-                    el.style.left = Math.random() * 100 + '%';
-                    const duracao = 5 + Math.random() * 4;
-                    el.style.animationDuration = duracao + 's';
-                    el.style.animationDelay = Math.random() * 2 + 's';
-                    const rot = Math.random() * 60 - 30;
-                    el.style.transform = `rotate(${rot}deg)`;
-                    coracoesContainer.appendChild(el);
-                    count++;
-                    const intervalo = 80 + Math.random() * 150;
-                    timeoutCoracoes = setTimeout(adicionarProximo, intervalo);
+                } else if (uni > 0 && cent === 0) {
+                    extenso += unidades[uni];
                 }
-                adicionarProximo();
+                if (extenso === '') extenso = 'zero';
+                extenso += (inteiro === 1) ? ' real' : ' reais';
+
+                const centavos = Math.round((valor - inteiro) * 100);
+                if (centavos > 0) {
+                    extenso += ' e ' + centavos + (centavos === 1 ? ' centavo' : ' centavos');
+                }
+                return extenso;
             }
 
-            envelope.addEventListener('click', abrirEnvelope);
-            btnAbrir.addEventListener('click', (e) => {
-                e.stopPropagation();
-                abrirEnvelope();
+            // === GERAR RECIBO ===
+            function gerarRecibo() {
+                const nRecibo = numRecibo.value || '___/_____';
+                const dataRec = formatarData(dataRecibo.value);
+                const locadorVal = locador.value || '______________________';
+                const locatarioVal = locatario.value || '______________________';
+                const imovelVal = imovel.value || '______________________';
+                const valorAluguelVal = parseFloat(valorAluguel.value) || 0;
+                const diaVen = diaVencimento.value || '19';
+                const medidorVal = medidor.value || '___';
+                const leitAtual = parseInt(leituraAtual.value) || 0;
+                const leitAnterior = parseInt(leituraAnterior.value) || 0;
+                const tarifaVal = parseFloat(tarifa.value) || 0;
+                const consumo = leitAtual - leitAnterior;
+                const valorEnergia = consumo * tarifaVal;
+                const totalRecebido = valorAluguelVal + valorEnergia;
+
+                const periodoInicioStr = formatarData(periodoInicio.value);
+                const periodoFimStr = formatarData(periodoFim.value);
+                const cidadeVal = cidade.value || 'Novo Remanso';
+
+                let pagamentos = [];
+                if (pagDinheiro.checked) pagamentos.push('Dinheiro');
+                if (pagPix.checked) pagamentos.push('Pix');
+                if (pagTransferencia.checked) pagamentos.push('Transferência');
+                let pagStr = pagamentos.length ? pagamentos.join(' / ') : '( ) Dinheiro ( ) Pix ( ) Transferência';
+
+                let html = `
+                    <div class="titulo-principal">RECIBO DE ALUGUEL</div>
+                    <div class="num-data">
+                        <span>Nº: ${nRecibo}</span>
+                        <span>Data: ${dataRec}</span>
+                    </div>
+
+                    <div class="dados-linha"><strong>Locador:</strong> <span class="valor">${locadorVal}</span></div>
+                    <div class="dados-linha"><strong>Locatário:</strong> <span class="valor">${locatarioVal}</span></div>
+                    <div class="dados-linha"><strong>Imóvel:</strong> <span class="valor">${imovelVal}</span></div>
+
+                    <div class="subtitulo">Condições do Aluguel:</div>
+                    <div class="dados-linha"><strong>Valor mensal:</strong> <span class="valor">${formatarMoeda(valorAluguelVal)}</span></div>
+                    <div class="dados-linha"><strong>Pagamento:</strong> <span class="valor">sempre até o dia ${diaVen} de cada mês</span></div>
+                    <div class="dados-linha"><strong>Energia elétrica:</strong> <span class="valor">Ficar por conta do locatário como combinado</span></div>
+
+                    <div class="subtitulo">CONTROLE DE CONSUMO DE ENERGIA    <span><strong>Referente ao período:</strong> ${periodoInicioStr} a ${periodoFimStr}</span></div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nº do medidor</th>
+                                <th>Leit. atual (kWh)</th>
+                                <th>Leit. anterior (kWh)</th>
+                                <th>Consumo (kWh)</th>
+                                <th>Tarifa (R$/kWh)</th>
+                                <th>Valor (R$)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>${medidorVal}</td>
+                                <td>${String(leitAtual).padStart(5, '0')}</td>
+                                <td>${String(leitAnterior).padStart(5, '0')}</td>
+                                <td>${String(consumo).padStart(5, '0')}</td>
+                                <td>${tarifaVal.toFixed(6)}</td>
+                                <td>${formatarMoeda(valorEnergia)}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    
+
+                    <div class="valor-recebido">
+                        <span><strong>Valor total:</strong> ${formatarMoeda(totalRecebido)} (${escreverPorExtenso(totalRecebido)})</span>
+                        <span><strong>Pagamento:</strong> ${pagStr}</span>
+                    </div>                    
+
+                    <div class="data-assinatura">
+                        <div class="local-data">
+                            ${cidadeVal}, ____ de __________ de 2026.
+                        </div>
+                        <div class="assinatura">
+                            <div class="linha"></div>
+                            <div class="legenda">Assinatura do Locador</div>
+                        </div>
+                    </div>
+                `;
+
+                reciboDiv.innerHTML = html;
+            }
+
+            // === EVENTOS ===
+            btnGerar.addEventListener('click', gerarRecibo);
+
+            window.addEventListener('DOMContentLoaded', function() {
+                const hoje = new Date();
+                const ano = hoje.getFullYear();
+                const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+                const dia = String(hoje.getDate()).padStart(2, '0');
+                const dataHoje = `${ano}-${mes}-${dia}`;
+                dataRecibo.value = dataHoje;
+                dataAssinatura.value = dataHoje;
+
+                let mesPassado = hoje.getMonth();
+                let anoPassado = ano;
+                if (mesPassado === 0) { mesPassado = 12; anoPassado--; }
+                const diaPeriodo = '19';
+                const mesPassadoStr = String(mesPassado).padStart(2, '0');
+                const mesAtualStr = String(hoje.getMonth() + 1).padStart(2, '0');
+                periodoInicio.value = `${anoPassado}-${mesPassadoStr}-${diaPeriodo}`;
+                periodoFim.value = `${ano}-${mesAtualStr}-${diaPeriodo}`;
+
+                gerarRecibo();
             });
-            envelope.addEventListener('dragstart', (e) => e.preventDefault());
+
+            btnImprimir.addEventListener('click', function() {
+                window.print();
+            });
+
+            // === PWA - Instalação ===
+            let deferredPrompt;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                toast.textContent = '📲 Toque aqui para instalar o app';
+                toast.classList.add('show');
+                toast.style.pointerEvents = 'auto';
+                toast.style.cursor = 'pointer';
+                toast.onclick = async () => {
+                    if (deferredPrompt) {
+                        deferredPrompt.prompt();
+                        const result = await deferredPrompt.userChoice;
+                        if (result.outcome === 'accepted') {
+                            toast.textContent = '✅ App instalado com sucesso!';
+                            toast.style.pointerEvents = 'none';
+                            setTimeout(() => toast.classList.remove('show'), 3000);
+                        } else {
+                            toast.textContent = '❌ Instalação cancelada';
+                            setTimeout(() => toast.classList.remove('show'), 2000);
+                        }
+                        deferredPrompt = null;
+                    }
+                };
+            });
+
+            window.addEventListener('appinstalled', () => {
+                toast.textContent = '✅ App instalado!';
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 3000);
+            });
+
+            // Detecta se já está instalado
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                toast.textContent = '📱 App em modo offline';
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2000);
+            }
+
+            // === SERVICE WORKER (para offline) ===
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js')
+                    .then(() => console.log('Service Worker registrado'))
+                    .catch(err => console.log('SW falhou:', err));
+            }
+
+        })();
+    </script>
+
+    <!-- Injeção do Service Worker via blob (para funcionar em um único arquivo) -->
+    <script>
+        // Cria um Service Worker dinamicamente via Blob URL
+        (function() {
+            if ('serviceWorker' in navigator) {
+                // Conteúdo do Service Worker
+                const swCode = `
+                    const CACHE_NAME = 'recibo-v1';
+                    const urlsToCache = [
+                        './',
+                        './index.html'
+                    ];
+
+                    self.addEventListener('install', (event) => {
+                        event.waitUntil(
+                            caches.open(CACHE_NAME)
+                                .then((cache) => {
+                                    return cache.addAll(urlsToCache);
+                                })
+                                .then(() => self.skipWaiting())
+                        );
+                    });
+
+                    self.addEventListener('activate', (event) => {
+                        event.waitUntil(
+                            caches.keys().then((cacheNames) => {
+                                return Promise.all(
+                                    cacheNames.map((name) => {
+                                        if (name !== CACHE_NAME) {
+                                            return caches.delete(name);
+                                        }
+                                    })
+                                );
+                            }).then(() => self.clients.claim())
+                        );
+                    });
+
+                    self.addEventListener('fetch', (event) => {
+                        event.respondWith(
+                            caches.match(event.request)
+                                .then((response) => {
+                                    return response || fetch(event.request);
+                                })
+                        );
+                    });
+                `;
+
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(blob);
+
+                // Registra o Service Worker com a URL do blob
+                navigator.serviceWorker.register(swUrl)
+                    .then(() => console.log('SW registrado via blob'))
+                    .catch(err => console.log('SW falhou:', err));
+            }
         })();
     </script>
 
