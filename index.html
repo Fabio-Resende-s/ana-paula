@@ -2,767 +2,107 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#1a3c5e" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <title>Recibo de Aluguel</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧾</text></svg>" />
-    <style>
-        /* ===== RESET E ESTILOS GERAIS ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Times New Roman', serif;
-            background: #f2f2f2;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 800px;
-            width: 100%;
-            background: #fff;
-            padding: 16px 18px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-
-        h1 {
-            font-size: 1.4rem;
-            text-align: center;
-            color: #1a3c5e;
-            margin-bottom: 14px;
-            font-family: Arial, sans-serif;
-        }
-
-        /* ===== FORMULÁRIO ===== */
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px 16px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group label {
-            font-weight: bold;
-            font-size: 0.75rem;
-            color: #333;
-            margin-bottom: 2px;
-            font-family: Arial, sans-serif;
-        }
-
-        .form-group input,
-        .form-group select {
-            padding: 5px 7px;
-            border: 1px solid #bbb;
-            border-radius: 5px;
-            font-size: 0.8rem;
-            font-family: 'Times New Roman', serif;
-            background: #fafafa;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: 2px solid #1a3c5e;
-            border-color: transparent;
-        }
-
-        .form-group.full-width {
-            grid-column: span 2;
-        }
-
-        .btn-gerar {
-            grid-column: span 2;
-            padding: 10px;
-            background: #1a3c5e;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            font-size: 0.95rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-            font-family: Arial, sans-serif;
-            margin-top: 4px;
-        }
-
-        .btn-gerar:hover {
-            background: #0f2a44;
-            transform: scale(1.01);
-        }
-        .btn-gerar:active {
-            transform: scale(0.97);
-        }
-
-        /* ===== RECIBO GERADO (compacto) ===== */
-        .recibo-area {
-            margin-top: 20px;
-            padding-top: 12px;
-            border-top: 2px dashed #ccc;
-        }
-
-        .recibo {
-            background: #fff;
-            border: 2px solid #1a3c5e;
-            border-radius: 6px;
-            padding: 14px 16px;
-            font-size: 0.78rem;
-            line-height: 1.35;
-            color: #000;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            max-width: 650px;
-            margin: 0 auto;
-        }
-
-        .recibo .titulo-principal {
-            font-size: 1.3rem;
-            font-weight: bold;
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-            color: #1a3c5e;
-            margin-bottom: 5px;
-        }
-
-        .recibo .num-data {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            margin-bottom: 8px;
-        }
-
-        .recibo .num-data span {
-            font-weight: bold;
-        }
-
-        .recibo .dados-linha {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 3px;
-            flex-wrap: wrap;
-        }
-
-        .recibo .dados-linha strong {
-            display: inline-block;
-            min-width: 65px;
-            font-size: 0.78rem;
-        }
-
-        .recibo .dados-linha .valor {
-            font-weight: normal;
-        }
-
-        .recibo .subtitulo {
-        background-color: #e2eae5;
-            font-weight: bold;
-            font-size: 0.85rem;
-            margin: 10px 0 4px 0;
-            text-decoration: underline;
-            color: #1a3c5e;
-           display: flex;
-            justify-content: space-between;
-        }
-
-        .recibo table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 6px 0;
-            font-size: 0.7rem;
-        }
-
-        .recibo table th {
-            background: #e6edf5;
-            border: 1px solid #333;
-            padding: 3px 2px;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        .recibo table td {
-            border: 1px solid #333;
-            padding: 3px 2px;
-            text-align: center;
-        }
-
-        .recibo .valor-recebido {
-            font-size: 0.85rem;
-            display: flex;
-            justify-content: space-between;
-            
-        }
-
-
-        .recibo .data-assinatura {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 14px;
-            align-items: flex-end;
-            flex-wrap: wrap;
-        }
-
-        .recibo .data-assinatura .local-data {
-            font-size: 0.78rem;
-        }
-
-        .recibo .data-assinatura .assinatura {
-            text-align: center;
-            min-width: 130px;
-        }
-
-        .recibo .data-assinatura .assinatura .linha {
-            width: 250px;
-            border-top: 1px solid #000;
-            margin: 16px auto 3px auto;
-        }
-
-        .recibo .data-assinatura .assinatura .legenda {
-            font-size: 0.7rem;
-        }
-
-        /* ===== BOTÃO IMPRIMIR ===== */
-        .btn-imprimir {
-            display: inline-block;
-            margin: 12px auto 0;
-            padding: 8px 22px;
-            background: #2d7d46;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-            font-family: Arial, sans-serif;
-        }
-
-        .btn-imprimir:hover {
-            background: #1e5f33;
-        }
-        .btn-imprimir:active {
-            transform: scale(0.96);
-        }
-
-        .recibo-actions {
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        /* ===== RESPONSIVO ===== */
-        @media (max-width: 700px) {
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-            .form-group.full-width {
-                grid-column: span 1;
-            }
-            .btn-gerar {
-                grid-column: span 1;
-            }
-            .recibo {
-                padding: 12px 10px;
-                font-size: 0.72rem;
-            }
-            .recibo .titulo-principal {
-                font-size: 1.1rem;
-            }
-            .recibo .data-assinatura {
-                flex-direction: column;
-                align-items: center;
-                gap: 12px;
-            }
-            .recibo .data-assinatura .assinatura .linha {
-                width: 110px;
-            }
-        }
-
-        /* ===== ESTILO PARA IMPRESSÃO (meia página A4) ===== */
-        @media print {
-            body {
-                background: #fff !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                display: block !important;
-            }
-            .container {
-                box-shadow: none !important;
-                padding: 0 !important;
-                border-radius: 0 !important;
-                max-width: 100% !important;
-                background: #fff !important;
-                margin: 0 !important;
-            }
-            .form-grid,
-            .btn-gerar,
-            .btn-imprimir,
-            .recibo-actions,
-            h1 {
-                display: none !important;
-            }
-            .recibo-area {
-                border-top: none !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                display: flex !important;
-                justify-content: center !important;
-                align-items: center !important;
-                min-height: 100vh !important;
-            }
-            .recibo {
-                border: 2px solid #000 !important;
-                border-radius: 0 !important;
-                box-shadow: none !important;
-                padding: 12px 16px !important;
-                max-width: 550px !important;
-                width: 90% !important;
-                font-size: 0.72rem !important;
-                margin: 20px auto !important;
-                page-break-after: avoid !important;
-                page-break-inside: avoid !important;
-                max-height: 70vh !important;
-                overflow: hidden !important;
-            }
-            .recibo .titulo-principal {
-                font-size: 1.2rem !important;
-            }
-            .recibo table {
-                font-size: 0.65rem !important;
-            }
-            .recibo .data-assinatura .assinatura .linha {
-                width: 120px !important;
-            }
-        }
-
-        /* ===== TOAST (notificação) ===== */
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #1a3c5e;
-            color: #fff;
-            padding: 8px 18px;
-            border-radius: 30px;
-            font-size: 0.9rem;
-            font-family: Arial, sans-serif;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            opacity: 0;
-            transition: opacity 0.4s;
-            pointer-events: none;
-            z-index: 999;
-        }
-        .toast.show {
-            opacity: 1;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🧾 Gerador de Recibo</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    
 </head>
 <body>
 
     <div class="container">
         <h1>🧾 Gerador de Recibo</h1>
 
-        <!-- FORMULÁRIO -->
         <form id="formRecibo" class="form-grid">
             <div class="form-group">
-                <label for="numRecibo">Nº do Recibo</label>
-                <input type="text" id="numRecibo" value="002/2026" />
+                <label for="numRecibo">Nº do Recibo *</label>
+                <input type="text" id="numRecibo" value="002/2026" required />
             </div>
             <div class="form-group">
-                <label for="dataRecibo">Data do Recibo</label>
-                <input type="date" id="dataRecibo" />
-            </div>
-
-            <div class="form-group">
-                <label for="locador">Locador</label>
-                <input type="text" id="locador" placeholder="Nome do locador" />
+                <label for="dataRecibo">Data do Recibo *</label>
+                <input type="date" id="dataRecibo" required />
             </div>
             <div class="form-group">
-                <label for="locatario">Locatário</label>
-                <input type="text" id="locatario" placeholder="Nome do locatário" />
+                <label for="locador">Locador *</label>
+                <input type="text" id="locador" placeholder="Nome do locador" required />
             </div>
-
+            <div class="form-group">
+                <label for="locatario">Locatário *</label>
+                <input type="text" id="locatario" placeholder="Nome do locatário" required />
+            </div>
             <div class="form-group full-width">
-                <label for="imovel">Imóvel</label>
-                <input type="text" id="imovel" value="Ponto Comercial nº 02" />
-            </div>
-
-            <div class="form-group">
-                <label for="valorAluguel">Valor mensal (R$)</label>
-                <input type="number" id="valorAluguel" value="500.00" step="0.01" min="0" />
+                <label for="imovel">Imóvel *</label>
+                <input type="text" id="imovel" value="Ponto Comercial nº 02 — Rua Leblon, 531, Centro — CEP 69.112-000 — Novo Remanso — AM" required />
             </div>
             <div class="form-group">
-                <label for="diaVencimento">Vencimento (dia)</label>
-                <input type="number" id="diaVencimento" value="19" min="1" max="31" />
-            </div>
-
-            <div class="form-group">
-                <label for="medidor">Nº do medidor</label>
-                <input type="text" id="medidor" value="002" />
+                <label for="valorAluguel">Valor mensal (R$) *</label>
+                <input type="number" id="valorAluguel" value="500.00" step="0.01" min="0" required />
             </div>
             <div class="form-group">
-                <label for="leituraAtual">Leitura atual (kWh)</label>
-                <input type="number" id="leituraAtual" value="0" step="1" min="0" />
+                <label for="diaVencimento">Vencimento (dia) *</label>
+                <input type="number" id="diaVencimento" value="19" min="1" max="31" required />
             </div>
             <div class="form-group">
-                <label for="leituraAnterior">Leitura anterior (kWh)</label>
-                <input type="number" id="leituraAnterior" value="0" step="1" min="0" />
+                <label for="medidor">Nº do medidor *</label>
+                <input type="text" id="medidor" value="002" required />
             </div>
             <div class="form-group">
-                <label for="tarifa">Tarifa (R$/kWh)</label>
-                <input type="number" id="tarifa" value="0.875710" step="0.000001" />
-            </div>
-
-            <div class="form-group">
-                <label for="periodoInicio">Período de (data)</label>
-                <input type="date" id="periodoInicio" />
+                <label for="leituraAtual">Leitura atual (kWh) *</label>
+                <input type="number" id="leituraAtual" value="0" step="1" min="0" required />
             </div>
             <div class="form-group">
-                <label for="periodoFim">até (data)</label>
-                <input type="date" id="periodoFim" />
+                <label for="leituraAnterior">Leitura anterior (kWh) *</label>
+                <input type="number" id="leituraAnterior" value="0" step="1" min="0" required />
             </div>
-
+            <div class="form-group">
+                <label for="tarifa">Tarifa (R$/kWh) *</label>
+                <input type="number" id="tarifa" value="0.875710" step="0.000001" required />
+            </div>
+            <div class="form-group">
+                <label for="periodoInicio">Período de (data) *</label>
+                <input type="date" id="periodoInicio" required />
+            </div>
+            <div class="form-group">
+                <label for="periodoFim">até (data) *</label>
+                <input type="date" id="periodoFim" required />
+            </div>
             <div class="form-group full-width">
                 <label>Forma de pagamento</label>
-                <div style="display: flex; gap: 16px; flex-wrap: wrap; padding: 4px 0;">
+                <div style="display: flex; gap: 20px; flex-wrap: wrap; padding: 5px 0;">
                     <label><input type="checkbox" id="pagDinheiro" /> Dinheiro</label>
                     <label><input type="checkbox" id="pagPix" /> Pix</label>
                     <label><input type="checkbox" id="pagTransferencia" /> Transferência</label>
                 </div>
             </div>
-
             <div class="form-group">
-                <label for="cidade">Cidade</label>
-                <input type="text" id="cidade" value="Novo Remanso" />
+                <label for="cidade">Cidade *</label>
+                <input type="text" id="cidade" value="Novo Remanso" required />
             </div>
             <div class="form-group">
-                <label for="dataAssinatura">Data de assinatura</label>
-                <input type="date" id="dataAssinatura" />
+                <label for="dataAssinatura">Data de assinatura *</label>
+                <input type="date" id="dataAssinatura" required />
             </div>
-
             <button type="button" class="btn-gerar" id="btnGerar">📄 Gerar Recibo</button>
         </form>
 
-        <!-- ÁREA DO RECIBO GERADO -->
+        <p style="margin-top: 15px; font-size: 0.85rem; color: #555; text-align: center;">
+            * Campos obrigatórios. Preencha todos e clique em "Gerar Recibo".
+        </p>
+
         <div class="recibo-area" id="reciboArea">
-            <div class="recibo" id="recibo"></div>
-            <div class="recibo-actions">
-                <button class="btn-imprimir" id="btnImprimir">🖨️ Imprimir / PDF</button>
+            <div class="recibo-wrapper">
+                <div class="recibo" id="reciboContent"></div>
+            </div>
+            <div class="btn-group">
+                <button class="btn-imprimir" id="btnImprimir">🖨️ Imprimir</button>
+                <button class="btn-baixar" id="btnBaixarPDF">⬇️ Baixar PDF</button>
             </div>
         </div>
     </div>
 
-    <!-- Toast (notificação de instalação) -->
-    <div class="toast" id="toast">📲 Instale este app para usar offline</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-    <script>
-        (function() {
-            // === REFERÊNCIAS ===
-            const numRecibo = document.getElementById('numRecibo');
-            const dataRecibo = document.getElementById('dataRecibo');
-            const locador = document.getElementById('locador');
-            const locatario = document.getElementById('locatario');
-            const imovel = document.getElementById('imovel');
-            const valorAluguel = document.getElementById('valorAluguel');
-            const diaVencimento = document.getElementById('diaVencimento');
-            const medidor = document.getElementById('medidor');
-            const leituraAtual = document.getElementById('leituraAtual');
-            const leituraAnterior = document.getElementById('leituraAnterior');
-            const tarifa = document.getElementById('tarifa');
-            const periodoInicio = document.getElementById('periodoInicio');
-            const periodoFim = document.getElementById('periodoFim');
-            const pagDinheiro = document.getElementById('pagDinheiro');
-            const pagPix = document.getElementById('pagPix');
-            const pagTransferencia = document.getElementById('pagTransferencia');
-            const cidade = document.getElementById('cidade');
-            const dataAssinatura = document.getElementById('dataAssinatura');
-            const btnGerar = document.getElementById('btnGerar');
-            const reciboDiv = document.getElementById('recibo');
-            const btnImprimir = document.getElementById('btnImprimir');
-            const toast = document.getElementById('toast');
-
-            // === FUNÇÕES AUXILIARES ===
-            function formatarData(dataStr) {
-                if (!dataStr) return '____/____/____';
-                const partes = dataStr.split('-');
-                return `${partes[2]}/${partes[1]}/${partes[0]}`;
-            }
-
-            function formatarMoeda(valor) {
-                return 'R$ ' + parseFloat(valor).toFixed(2).replace('.', ',');
-            }
-
-            function escreverPorExtenso(valor) {
-                const inteiro = Math.floor(valor);
-                if (inteiro === 0) return 'zero reais';
-                const unidades = ['', 'um', 'dois', 'três', 'quatro', 'cinco', 'seis', 'sete', 'oito', 'nove'];
-                const dezenas = ['', 'dez', 'vinte', 'trinta', 'quarenta', 'cinquenta', 'sessenta', 'setenta', 'oitenta', 'noventa'];
-                const centenas = ['', 'cem', 'duzentos', 'trezentos', 'quatrocentos', 'quinhentos', 'seiscentos', 'setecentos', 'oitocentos', 'novecentos'];
-
-                let extenso = '';
-                const cent = Math.floor(inteiro / 100);
-                const resto = inteiro % 100;
-                const dez = Math.floor(resto / 10);
-                const uni = resto % 10;
-
-                if (cent > 0) {
-                    extenso += centenas[cent];
-                    if (resto > 0) extenso += ' e ';
-                }
-                if (dez > 0) {
-                    if (dez === 1 && uni > 0) {
-                        const especiais = ['', 'onze', 'doze', 'treze', 'catorze', 'quinze', 'dezesseis', 'dezessete', 'dezoito', 'dezenove'];
-                        extenso += especiais[uni];
-                    } else {
-                        extenso += dezenas[dez];
-                        if (uni > 0) extenso += ' e ' + unidades[uni];
-                    }
-                } else if (uni > 0 && cent === 0) {
-                    extenso += unidades[uni];
-                }
-                if (extenso === '') extenso = 'zero';
-                extenso += (inteiro === 1) ? ' real' : ' reais';
-
-                const centavos = Math.round((valor - inteiro) * 100);
-                if (centavos > 0) {
-                    extenso += ' e ' + centavos + (centavos === 1 ? ' centavo' : ' centavos');
-                }
-                return extenso;
-            }
-
-            // === GERAR RECIBO ===
-            function gerarRecibo() {
-                const nRecibo = numRecibo.value || '___/_____';
-                const dataRec = formatarData(dataRecibo.value);
-                const locadorVal = locador.value || '______________________';
-                const locatarioVal = locatario.value || '______________________';
-                const imovelVal = imovel.value || '______________________';
-                const valorAluguelVal = parseFloat(valorAluguel.value) || 0;
-                const diaVen = diaVencimento.value || '19';
-                const medidorVal = medidor.value || '___';
-                const leitAtual = parseInt(leituraAtual.value) || 0;
-                const leitAnterior = parseInt(leituraAnterior.value) || 0;
-                const tarifaVal = parseFloat(tarifa.value) || 0;
-                const consumo = leitAtual - leitAnterior;
-                const valorEnergia = consumo * tarifaVal;
-                const totalRecebido = valorAluguelVal + valorEnergia;
-
-                const periodoInicioStr = formatarData(periodoInicio.value);
-                const periodoFimStr = formatarData(periodoFim.value);
-                const cidadeVal = cidade.value || 'Novo Remanso';
-
-                let pagamentos = [];
-                if (pagDinheiro.checked) pagamentos.push('Dinheiro');
-                if (pagPix.checked) pagamentos.push('Pix');
-                if (pagTransferencia.checked) pagamentos.push('Transferência');
-                let pagStr = pagamentos.length ? pagamentos.join(' / ') : '( ) Dinheiro ( ) Pix ( ) Transferência';
-
-                let html = `
-                    <div class="titulo-principal">RECIBO DE ALUGUEL</div>
-                    <div class="num-data">
-                        <span>Nº: ${nRecibo}</span>
-                        <span>Data: ${dataRec}</span>
-                    </div>
-
-                    <div class="dados-linha"><strong>Locador:</strong> <span class="valor">${locadorVal}</span></div>
-                    <div class="dados-linha"><strong>Locatário:</strong> <span class="valor">${locatarioVal}</span></div>
-                    <div class="dados-linha"><strong>Imóvel:</strong> <span class="valor">${imovelVal}</span></div>
-
-                    <div class="subtitulo">Condições do Aluguel:</div>
-                    <div class="dados-linha"><strong>Valor mensal:</strong> <span class="valor">${formatarMoeda(valorAluguelVal)}</span></div>
-                    <div class="dados-linha"><strong>Pagamento:</strong> <span class="valor">sempre até o dia ${diaVen} de cada mês</span></div>
-                    <div class="dados-linha"><strong>Energia elétrica:</strong> <span class="valor">Ficar por conta do locatário como combinado</span></div>
-
-                    <div class="subtitulo">CONTROLE DE CONSUMO DE ENERGIA    <span><strong>Referente ao período:</strong> ${periodoInicioStr} a ${periodoFimStr}</span></div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nº do medidor</th>
-                                <th>Leit. atual (kWh)</th>
-                                <th>Leit. anterior (kWh)</th>
-                                <th>Consumo (kWh)</th>
-                                <th>Tarifa (R$/kWh)</th>
-                                <th>Valor (R$)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>${medidorVal}</td>
-                                <td>${String(leitAtual).padStart(5, '0')}</td>
-                                <td>${String(leitAnterior).padStart(5, '0')}</td>
-                                <td>${String(consumo).padStart(5, '0')}</td>
-                                <td>${tarifaVal.toFixed(6)}</td>
-                                <td>${formatarMoeda(valorEnergia)}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    
-
-                    <div class="valor-recebido">
-                        <span><strong>Valor total:</strong> ${formatarMoeda(totalRecebido)} (${escreverPorExtenso(totalRecebido)})</span>
-                        <span><strong>Pagamento:</strong> ${pagStr}</span>
-                    </div>                    
-
-                    <div class="data-assinatura">
-                        <div class="local-data">
-                            ${cidadeVal}, ____ de __________ de 2026.
-                        </div>
-                        <div class="assinatura">
-                            <div class="linha"></div>
-                            <div class="legenda">Assinatura do Locador</div>
-                        </div>
-                    </div>
-                `;
-
-                reciboDiv.innerHTML = html;
-            }
-
-            // === EVENTOS ===
-            btnGerar.addEventListener('click', gerarRecibo);
-
-            window.addEventListener('DOMContentLoaded', function() {
-                const hoje = new Date();
-                const ano = hoje.getFullYear();
-                const mes = String(hoje.getMonth() + 1).padStart(2, '0');
-                const dia = String(hoje.getDate()).padStart(2, '0');
-                const dataHoje = `${ano}-${mes}-${dia}`;
-                dataRecibo.value = dataHoje;
-                dataAssinatura.value = dataHoje;
-
-                let mesPassado = hoje.getMonth();
-                let anoPassado = ano;
-                if (mesPassado === 0) { mesPassado = 12; anoPassado--; }
-                const diaPeriodo = '19';
-                const mesPassadoStr = String(mesPassado).padStart(2, '0');
-                const mesAtualStr = String(hoje.getMonth() + 1).padStart(2, '0');
-                periodoInicio.value = `${anoPassado}-${mesPassadoStr}-${diaPeriodo}`;
-                periodoFim.value = `${ano}-${mesAtualStr}-${diaPeriodo}`;
-
-                gerarRecibo();
-            });
-
-            btnImprimir.addEventListener('click', function() {
-                window.print();
-            });
-
-            // === PWA - Instalação ===
-            let deferredPrompt;
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-                toast.textContent = '📲 Toque aqui para instalar o app';
-                toast.classList.add('show');
-                toast.style.pointerEvents = 'auto';
-                toast.style.cursor = 'pointer';
-                toast.onclick = async () => {
-                    if (deferredPrompt) {
-                        deferredPrompt.prompt();
-                        const result = await deferredPrompt.userChoice;
-                        if (result.outcome === 'accepted') {
-                            toast.textContent = '✅ App instalado com sucesso!';
-                            toast.style.pointerEvents = 'none';
-                            setTimeout(() => toast.classList.remove('show'), 3000);
-                        } else {
-                            toast.textContent = '❌ Instalação cancelada';
-                            setTimeout(() => toast.classList.remove('show'), 2000);
-                        }
-                        deferredPrompt = null;
-                    }
-                };
-            });
-
-            window.addEventListener('appinstalled', () => {
-                toast.textContent = '✅ App instalado!';
-                toast.classList.add('show');
-                setTimeout(() => toast.classList.remove('show'), 3000);
-            });
-
-            // Detecta se já está instalado
-            if (window.matchMedia('(display-mode: standalone)').matches) {
-                toast.textContent = '📱 App em modo offline';
-                toast.classList.add('show');
-                setTimeout(() => toast.classList.remove('show'), 2000);
-            }
-
-            // === SERVICE WORKER (para offline) ===
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('sw.js')
-                    .then(() => console.log('Service Worker registrado'))
-                    .catch(err => console.log('SW falhou:', err));
-            }
-
-        })();
-    </script>
-
-    <!-- Injeção do Service Worker via blob (para funcionar em um único arquivo) -->
-    <script>
-        // Cria um Service Worker dinamicamente via Blob URL
-        (function() {
-            if ('serviceWorker' in navigator) {
-                // Conteúdo do Service Worker
-                const swCode = `
-                    const CACHE_NAME = 'recibo-v1';
-                    const urlsToCache = [
-                        './',
-                        './index.html'
-                    ];
-
-                    self.addEventListener('install', (event) => {
-                        event.waitUntil(
-                            caches.open(CACHE_NAME)
-                                .then((cache) => {
-                                    return cache.addAll(urlsToCache);
-                                })
-                                .then(() => self.skipWaiting())
-                        );
-                    });
-
-                    self.addEventListener('activate', (event) => {
-                        event.waitUntil(
-                            caches.keys().then((cacheNames) => {
-                                return Promise.all(
-                                    cacheNames.map((name) => {
-                                        if (name !== CACHE_NAME) {
-                                            return caches.delete(name);
-                                        }
-                                    })
-                                );
-                            }).then(() => self.clients.claim())
-                        );
-                    });
-
-                    self.addEventListener('fetch', (event) => {
-                        event.respondWith(
-                            caches.match(event.request)
-                                .then((response) => {
-                                    return response || fetch(event.request);
-                                })
-                        );
-                    });
-                `;
-
-                const blob = new Blob([swCode], { type: 'application/javascript' });
-                const swUrl = URL.createObjectURL(blob);
-
-                // Registra o Service Worker com a URL do blob
-                navigator.serviceWorker.register(swUrl)
-                    .then(() => console.log('SW registrado via blob'))
-                    .catch(err => console.log('SW falhou:', err));
-            }
-        })();
-    </script>
+    <script src="script.js"></script>    
 
 </body>
 </html>
