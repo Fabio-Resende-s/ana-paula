@@ -6,14 +6,12 @@
     <title>🧾 Gerador de Recibo</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="stylesheet" href="style.css" />
-    
 </head>
 <body>
-
     <div class="container">
         <h1>🧾 Gerador de Recibo</h1>
-
         <form id="formRecibo" class="form-grid">
+            <!-- Cabeçalho -->
             <div class="form-group">
                 <label for="numRecibo">Nº do Recibo *</label>
                 <input type="text" id="numRecibo" value="002/2026" required />
@@ -34,24 +32,29 @@
                 <label for="imovel">Imóvel *</label>
                 <input type="text" id="imovel" value="Ponto Comercial nº 02 — Rua Leblon, 531, Centro — CEP 69.112-000 — Novo Remanso — AM" required />
             </div>
+
+            <!-- Valores -->
             <div class="form-group">
-                <label for="valorAluguel">Valor mensal (R$) *</label>
+                <label for="valorAluguel">Valor do Aluguel (R$) *</label>
                 <input type="number" id="valorAluguel" value="500.00" step="0.01" min="0" required />
             </div>
+            
             <div class="form-group">
                 <label for="diaVencimento">Vencimento (dia) *</label>
                 <input type="number" id="diaVencimento" value="19" min="1" max="31" required />
             </div>
+
+            <!-- Luz -->
             <div class="form-group">
-                <label for="medidor">Nº do medidor *</label>
+                <label for="medidor">Nº do Medidor *</label>
                 <input type="text" id="medidor" value="002" required />
             </div>
             <div class="form-group">
-                <label for="leituraAtual">Leitura atual (kWh) *</label>
+                <label for="leituraAtual">Leitura Atual (kWh) *</label>
                 <input type="number" id="leituraAtual" value="0" step="1" min="0" required />
             </div>
             <div class="form-group">
-                <label for="leituraAnterior">Leitura anterior (kWh) *</label>
+                <label for="leituraAnterior">Leitura Anterior (kWh) *</label>
                 <input type="number" id="leituraAnterior" value="0" step="1" min="0" required />
             </div>
             <div class="form-group">
@@ -59,29 +62,50 @@
                 <input type="number" id="tarifa" value="0.875710" step="0.000001" required />
             </div>
             <div class="form-group">
-                <label for="periodoInicio">Período de (data) *</label>
+                <label for="valorLuz">Valor da Luz (R$)</label>
+                <input type="number" id="valorLuz" readonly placeholder="calcula sozinho" />
+            </div>
+
+            <!-- Saldo Pendente — VOCÊ DIGITA O VALOR AQUI 👇 -->
+            <div class="form-group">
+                <label>🔴 Saldo Pendente a Pagar (R$) *</label>
+                <input type="number" id="saldoPendente" step="0.01" min="0" placeholder="Digite o valor" required />
+                <!-- ✅ SUA OBSERVAÇÃO AQUI -->
+            <div class="dados-linha" style="font-style: italic; color: #444; margin-top: 4px;">
+               <strong>Obs:</strong> Referente à conta de luz do mês anterior
+            </div>
+
+            </div>
+
+            <!-- Período -->
+            <div class="form-group">
+                <label for="periodoInicio">Período — De *</label>
                 <input type="date" id="periodoInicio" required />
             </div>
             <div class="form-group">
-                <label for="periodoFim">até (data) *</label>
+                <label for="periodoFim">Período — Até *</label>
                 <input type="date" id="periodoFim" required />
             </div>
+
+            <!-- Forma de Pagamento -->
             <div class="form-group full-width">
-                <label>Forma de pagamento</label>
+                <label>Forma de Pagamento</label>
                 <div style="display: flex; gap: 20px; flex-wrap: wrap; padding: 5px 0;">
                     <label><input type="checkbox" id="pagDinheiro" /> Dinheiro</label>
                     <label><input type="checkbox" id="pagPix" /> Pix</label>
                     <label><input type="checkbox" id="pagTransferencia" /> Transferência</label>
                 </div>
             </div>
+
             <div class="form-group">
                 <label for="cidade">Cidade *</label>
                 <input type="text" id="cidade" value="Novo Remanso" required />
             </div>
             <div class="form-group">
-                <label for="dataAssinatura">Data de assinatura *</label>
+                <label for="dataAssinatura">Data de Assinatura *</label>
                 <input type="date" id="dataAssinatura" required />
             </div>
+
             <button type="button" class="btn-gerar" id="btnGerar">📄 Gerar Recibo</button>
         </form>
 
@@ -100,9 +124,6 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
-    <script src="script.js"></script>    
-
+    <script src="script.js"></script>
 </body>
 </html>
