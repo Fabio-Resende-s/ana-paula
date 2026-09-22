@@ -126,6 +126,19 @@
         return `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(payload)}`;
     }
 
+    // === ESPERA IMAGENS CARREGAR ===
+    async function esperarImagensCarregadas(elemento) {
+        const imagens = elemento.querySelectorAll('img');
+        for (const img of imagens) {
+            if (!img.complete) {
+                await new Promise(resolve => {
+                    img.onload = resolve;
+                    img.onerror = resolve;
+                });
+            }
+        }
+    }
+
     // === GERAR RECIBO ===
     function gerarRecibo() {
         calcularValorLuz();
@@ -195,9 +208,7 @@
             <div class="dados-linha"><strong>Imóvel:</strong> <span class="valor">${imovelVal}</span></div>
             
             <div class="subtitulo">Condições do Aluguel</div>
-
-            <div class="dados-linha"><strong>Valor mensal:</strong> <span class="valor">${formatarMoeda(valorAluguelVal)} Conforme o acordo que fizemos</span></div>
-
+            <div class="dados-linha"><strong>Valor mensal:</strong> <span class="valor">${formatarMoeda(valorAluguelVal)} — Conforme o acordo que fizemos</span></div>
             <div class="dados-linha"><strong>Pagamento:</strong> <span class="valor">sempre até o dia ${diaVen} de cada mês</span></div>
             <div class="dados-linha"><strong>Energia elétrica:</strong> <span class="valor">por conta do locatário</span></div>
             
@@ -276,24 +287,39 @@
 
     // === EVENTOS ===
     btnGerar.addEventListener('click', gerarRecibo);
+
     btnImprimir.addEventListener('click', function() {
         window.print();
     });
-    btnBaixarPDF.addEventListener('click', function() {
+
+    // === BAIXAR PDF — CORRIGIDO E ESPERANDO CARREGAR ===
+    btnBaixarPDF.addEventListener('click', async function() {
         const element = document.getElementById('reciboContent');
+        
         if (!element.innerHTML.trim()) {
             alert('❌ Gere o recibo primeiro antes de baixar o PDF.');
             return;
         }
+
+        // Espera o QR Code carregar antes de gerar
+        await esperarImagensCarregadas(element);
+
         setTimeout(() => {
-            html2pdf().set({
-                margin: [0.5, 0.5, 0.5, 0.5],
-                filename: 'recibo_aluguel.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, letterRendering: true },
-                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-            }).from(element).save();
-        }, 300);
+            html2pdf()
+                .set({
+                    margin: [15, 15, 15, 15], // margens maiores em milímetros
+                    filename: 'recibo_aluguel.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { 
+                        scale: 2, 
+                        useCORS: true,
+                        letterRendering: true
+                    },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                })
+                .from(element)
+                .save();
+        }, 600);
     });
 
     leituraAtual.addEventListener('input', calcularValorLuz);

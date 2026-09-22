@@ -20,11 +20,11 @@
                 <label for="dataRecibo">Data do Recibo *</label>
                 <input type="date" id="dataRecibo" required />
             </div>
-            <div class="form-group">
+            <div class="form-group full-width">
                 <label for="locador">Locador *</label>
                 <input type="text" id="locador" placeholder="Nome do locador" required />
             </div>
-            <div class="form-group">
+            <div class="form-group full-width">
                 <label for="locatario">Locatário *</label>
                 <input type="text" id="locatario" placeholder="Nome do locatário" required />
             </div>
@@ -38,7 +38,6 @@
                 <label for="valorAluguel">Valor do Aluguel (R$) *</label>
                 <input type="number" id="valorAluguel" value="500.00" step="0.01" min="0" required />
             </div>
-            
             <div class="form-group">
                 <label for="diaVencimento">Vencimento (dia) *</label>
                 <input type="number" id="diaVencimento" value="19" min="1" max="31" required />
@@ -50,31 +49,29 @@
                 <input type="text" id="medidor" value="002" required />
             </div>
             <div class="form-group">
-                <label for="leituraAtual">Leitura Atual (kWh) *</label>
-                <input type="number" id="leituraAtual" value="0" step="1" min="0" required />
+                <label for="tarifa">Tarifa (R$/kWh) *</label>
+                <input type="number" id="tarifa" value="0.875710" step="0.000001" required />
             </div>
             <div class="form-group">
                 <label for="leituraAnterior">Leitura Anterior (kWh) *</label>
                 <input type="number" id="leituraAnterior" value="0" step="1" min="0" required />
             </div>
             <div class="form-group">
-                <label for="tarifa">Tarifa (R$/kWh) *</label>
-                <input type="number" id="tarifa" value="0.875710" step="0.000001" required />
+                <label for="leituraAtual">Leitura Atual (kWh) *</label>
+                <input type="number" id="leituraAtual" value="0" step="1" min="0" required />
             </div>
             <div class="form-group">
                 <label for="valorLuz">Valor da Luz (R$)</label>
                 <input type="number" id="valorLuz" readonly placeholder="calcula sozinho" />
             </div>
 
-            <!-- Saldo Pendente — VOCÊ DIGITA O VALOR AQUI 👇 -->
-            <div class="form-group">
+            <!-- Saldo Pendente -->
+            <div class="form-group full-width">
                 <label>🔴 Saldo Pendente a Pagar (R$) *</label>
                 <input type="number" id="saldoPendente" step="0.01" min="0" placeholder="Digite o valor" required />
-                <!-- ✅ SUA OBSERVAÇÃO AQUI -->
-            <div class="dados-linha" style="font-style: italic; color: #444; margin-top: 4px;">
-               <strong>Obs:</strong> Referente à conta de luz do mês anterior
-            </div>
-
+                <small style="color: #666; font-style: italic; margin-top: 4px; display: block;">
+                    Obs: Referente à conta de luz do mês anterior
+                </small>
             </div>
 
             <!-- Período -->
@@ -90,10 +87,10 @@
             <!-- Forma de Pagamento -->
             <div class="form-group full-width">
                 <label>Forma de Pagamento</label>
-                <div style="display: flex; gap: 20px; flex-wrap: wrap; padding: 5px 0;">
-                    <label><input type="checkbox" id="pagDinheiro" /> Dinheiro</label>
-                    <label><input type="checkbox" id="pagPix" /> Pix</label>
-                    <label><input type="checkbox" id="pagTransferencia" /> Transferência</label>
+                <div style="display: flex; gap: 25px; flex-wrap: wrap; padding: 8px 0;">
+                    <label style="font-size: 1rem; cursor: pointer;"><input type="checkbox" id="pagDinheiro" /> Dinheiro</label>
+                    <label style="font-size: 1rem; cursor: pointer;"><input type="checkbox" id="pagPix" /> Pix</label>
+                    <label style="font-size: 1rem; cursor: pointer;"><input type="checkbox" id="pagTransferencia" /> Transferência</label>
                 </div>
             </div>
 
@@ -109,7 +106,7 @@
             <button type="button" class="btn-gerar" id="btnGerar">📄 Gerar Recibo</button>
         </form>
 
-        <p style="margin-top: 15px; font-size: 0.85rem; color: #555; text-align: center;">
+        <p style="margin-top: 15px; font-size: 0.95rem; color: #555; text-align: center;">
             * Campos obrigatórios. Preencha todos e clique em "Gerar Recibo".
         </p>
 
@@ -123,7 +120,6 @@
             </div>
         </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
